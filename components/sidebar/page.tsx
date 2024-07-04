@@ -30,12 +30,21 @@ export default function TemporaryDrawer() {
         ))}
       </List>
       <Divider />
+      <List>
+        {siteConfig.adminItems.map((item) => (
+          <ListItem key={item.href} disablePadding>
+            <ListItemButton href={item.href}>
+              <ListItemText primary={item.label} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
     </Box>
   );
 
   return (
     <div>
-      <Button className="text-white bg-none" onClick={toggleDrawer(true)}>
+      <Button className="bg-blue-200 hover:bg-blue-300" onClick={toggleDrawer(true)}>
         <svg
           className="size-6"
           fill="none"

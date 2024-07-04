@@ -9,14 +9,39 @@ import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 // import Sidebar from "@/components/sidebar/page";
 
+// export const metadata: Metadata = {
+//   title: {
+//     default: siteConfig.name,
+//     template: `%s - ${siteConfig.name}`,
+//   },
+//   description: siteConfig.description,
+
+// };
+
+const APP_NAME = siteConfig.name;
+const APP_DEFAULT_TITLE = siteConfig.name;
+const APP_TITLE_TEMPLATE = `%s - ${siteConfig.name}`;
+const APP_DESCRIPTION = siteConfig.description;
+
 export const metadata: Metadata = {
+  applicationName: APP_NAME,
   title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
+    default: APP_NAME,
+    template: "%s - NJS App",
   },
-  description: siteConfig.description,
+  description: APP_DESCRIPTION,
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: APP_NAME,
+  },
+  formatDetection: {
+    telephone: false,
+  },
   icons: {
-    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
   },
 };
 
@@ -33,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang="en" dir="ltr">
       <head />
       <body
         className={clsx(
@@ -44,7 +69,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
             <Navbar />
-            <main className="container p-9 h-screen">{children}</main>
+            {children}
             <footer className="w-full flex items-center justify-center py-3">
               <p>Developed by Mitchell & Luca</p>
             </footer>

@@ -17,4 +17,22 @@ export const siteConfig = {
       href: "/spier",
     },
   ],
+  adminItems: [
+    {
+      label: "Admin",
+      href: "/admin/",
+    },
+    {
+      label: "Producten",
+      href: "/admin/producten",
+    },
+    {
+      label: "Barren",
+      href: "/admin/barren",
+    },
+    {
+      label: "Data",
+      href: "/admin/data",
+    },
+  ]
 };

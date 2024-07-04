@@ -6,7 +6,7 @@ import { siteConfig } from "./cards";
 
 export default function Home() {
   return (
-    <main className="flex gap-3">
+    <main className="flex gap-3 p-9 min-h-screen">
       {siteConfig.cardItems.map((item) => (
         <Button
           key={item.href}
