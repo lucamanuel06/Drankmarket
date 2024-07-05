@@ -20,17 +20,32 @@ export const Navbar = () => {
 
   const showBurger = currentPage === "/" || showNavbar;
 
-  const showAdmin = (currentPage === "/admin" || currentPage === "/admin/producten" || currentPage === "/admin/barren" || currentPage === "/admin/data") || showBurger;
+  const showAdmin =
+    currentPage === "/admin" ||
+    currentPage === "/admin/producten" ||
+    currentPage === "/admin/barren" ||
+    currentPage === "/admin/data" ||
+    showBurger;
+
+  const showAdminButton =
+    currentPage === "/admin" ||
+    currentPage === "/admin/producten" ||
+    currentPage === "/admin/barren" ||
+    currentPage === "/admin/data";
 
   return (
     <>
-      <NextUINavbar className="bg-blue-500 mb-2" maxWidth="full" position="sticky">
+      <NextUINavbar
+        className="bg-blue-500 mb-2"
+        maxWidth="full"
+        position="sticky"
+      >
         {showAdmin && (
-          <NavbarContent>
+          <NavbarContent justify="start">
             <SideBar />
           </NavbarContent>
         )}
-        <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+        <NavbarContent className="basis-1/5 sm:basis-full" justify="center">
           {showNavbar && (
             <ul className="hidden lg:flex gap-4 justify-start ml-2">
               {siteConfig.navItems.map((item) => (
@@ -56,7 +71,30 @@ export const Navbar = () => {
           justify="end"
         >
           {showNavbar && (
-            <Button isIconOnly as={Link} className="bg-blue-300"  href="/">
+            <Button isIconOnly as={Link} className="bg-blue-300" href="/">
+              <svg
+                className="size-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </Button>
+          )}
+        </NavbarContent>
+        <NavbarContent
+          className="hidden sm:flex basis-1/5 sm:basis-full"
+          justify="end"
+        >
+          {showAdminButton && (
+            <Button isIconOnly as={Link} className="bg-blue-300" href="/admin">
               <svg
                 className="size-6"
                 fill="none"

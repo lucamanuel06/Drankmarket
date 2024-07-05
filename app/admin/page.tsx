@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
@@ -7,10 +7,25 @@ export default function Page() {
 
   return (
     <main className="min-h-screen container mx-auto">
-      <div className="flex justify-around">
-        <Button onPress={() => router.push('admin/producten')}>Beheer de barren</Button>
-        <Button onPress={() => router.push('admin/barren')}>Beheer de producten</Button>
-        <Button onPress={() => router.push('admin/data')}>Bekijk de data</Button>
+      <div className="flex justify-center gap-2">
+        <Button
+          className="py-16 px-40"
+          onPress={() => router.push("admin/producten")}
+        >
+          Beheer de barren
+        </Button>
+        <Button
+          className="py-16 px-40"
+          onPress={() => router.push("admin/barren")}
+        >
+          Beheer de producten
+        </Button>
+        <Button
+          className="py-16 px-40"
+          onPress={() => router.push("admin/data")}
+        >
+          Bekijk de data
+        </Button>
       </div>
     </main>
   );
