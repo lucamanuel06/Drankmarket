@@ -18,35 +18,29 @@ export interface ProvidersProps {
 }
 
 export type ServiceContent = {
-  barService: BarService | null
-  loginService: LoginService | null
-  deviceService: DeviceService | null
-  drinkService: DrinkService | null
-  categoryService: CategoryService | null
-  orderService: OrderService | null
+  barService: BarService
+  loginService: LoginService
+  deviceService: DeviceService
+  drinkService: DrinkService
+  categoryService: CategoryService
+  orderService: OrderService
 }
 
-export const ServiceContext = React.createContext<ServiceContent>({
-  barService: null,
-  loginService: null,
-  deviceService: null,
-  drinkService: null,
-  categoryService: null,
-  orderService: null,
-});
+const services = {
+  barService: new BarService(),
+  loginService: new LoginService(),
+  deviceService: new DeviceService(),
+  drinkService: new DrinkService(),
+  categoryService: new CategoryService(),
+  orderService: new OrderService(),
+}
+
+export const ServiceContext = React.createContext<ServiceContent>(services);
 
 export const useServiceContext = () => React.useContext(ServiceContext)
 
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
-  const services = {
-    barService: new BarService(),
-    loginService: new LoginService(),
-    deviceService: new DeviceService(),
-    drinkService: new DrinkService(),
-    categoryService: new CategoryService(),
-    orderService: new OrderService(),
-  }
 
   return (
     <NextUIProvider navigate={router.push}>
