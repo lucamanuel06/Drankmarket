@@ -1,5 +1,5 @@
 import { ApiService } from "./api-service"
-import { Device, mapResponseToDevice } from "../models/device"
+import { Device, mapResponseToDevice } from "@/models/device"
 
 export class DeviceService extends ApiService {
 

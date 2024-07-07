@@ -1,5 +1,5 @@
 import { ApiService } from "./api-service"
-import { Order, mapResponseToOrder } from "../models/order"
+import { Order, mapResponseToOrder } from "@/models/order"
 
 export class OrderService extends ApiService {
 

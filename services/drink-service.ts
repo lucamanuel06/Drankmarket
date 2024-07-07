@@ -1,5 +1,5 @@
 import { ApiService } from "./api-service"
-import { Drink, mapResponseToDrink } from "../models/drink"
+import { Drink, mapResponseToDrink } from "@/models/drink"
 
 export class DrinkService extends ApiService {
 

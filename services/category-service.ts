@@ -1,5 +1,5 @@
 import { ApiService } from "./api-service"
-import { Category, mapResponseToCategory } from "../models/category"
+import { Category, mapResponseToCategory } from "@/models/category"
 
 export class CategoryService extends ApiService {
 

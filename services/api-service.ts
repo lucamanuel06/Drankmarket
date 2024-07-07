@@ -1,4 +1,4 @@
-import apiConfig from "../api-config.json"
+import apiConfig from "@/api-config.json"
 
 export abstract class ApiService {
 

@@ -5,9 +5,9 @@ import { NextUIProvider } from "@nextui-org/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
-import { BarService } from "../services/bar-service"
-import { LoginService } from "../services/login-service"
-import { DeviceService } from "../services/device-service"
+import { BarService } from "@/services/bar-service"
+import { LoginService } from "@/services/login-service"
+import { DeviceService } from "@/services/device-service"
 import { DrinkService } from "@/services/drink-service";
 import { CategoryService } from "@/services/category-service";
 import { OrderService } from "@/services/order-service";
