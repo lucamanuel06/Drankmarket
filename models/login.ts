@@ -15,6 +15,6 @@ export const mapResponseToUser = (response: any): User => {
   return {
     barId: response["id"],
     barName: response["name"],
-    isAdmin: response["super_admin"],
+    isAdmin: response["super_admin"] === 1,
   }
 }

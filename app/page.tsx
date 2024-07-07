@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "@nextui-org/react";
 import { siteConfig } from "./cards";
 import { useServiceContext } from "./providers";
@@ -10,7 +10,7 @@ import { LoginType } from "@/models/login";
 export default function Home() {
   let loginService = useServiceContext().loginService
   let storedBarId = localStorage.getItem(Constants.BarId)
-  const [isLoggedIn, setLoggedIn] = useState(storedBarId !== null)
+  const [isLoggedIn, setLoggedIn] = React.useState(storedBarId !== null)
 
   return (
     <main className="flex gap-3 p-9 min-h-screen">
@@ -31,9 +31,9 @@ export default function Home() {
 }
 
 const LoginBox: React.FC<LoginInputProps> = ({ loginService, setLoggedIn }) => {
-  const [userName, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [loginFailed, setLoginFailed] = useState(false)
+  const [userName, setUsername] = React.useState("")
+  const [password, setPassword] = React.useState("")
+  const [loginFailed, setLoginFailed] = React.useState(false)
 
   async function tryLogin() {
     let loginState = LoginType.Loading
@@ -59,7 +59,7 @@ const LoginBox: React.FC<LoginInputProps> = ({ loginService, setLoggedIn }) => {
       <div className="flex-col bg-gray-800 w-fit space-y-2 p-8 rounded-xl">
         <h3>Login</h3>
         <div>
-          <label htmlFor="input-username">Name</label>
+          <label htmlFor="input-username">Naam</label>
           <div>
             <input 
               value={userName} 
@@ -71,7 +71,7 @@ const LoginBox: React.FC<LoginInputProps> = ({ loginService, setLoggedIn }) => {
           </div>
         </div>
         <div>
-          <label htmlFor="input-password">Password</label>
+          <label htmlFor="input-password">Wachtwoord</label>
           <div>
             <input 
               value={password} 
@@ -89,7 +89,7 @@ const LoginBox: React.FC<LoginInputProps> = ({ loginService, setLoggedIn }) => {
           type="button"
         />
         { loginFailed &&
-          <p className="text-red-600">Login failed</p>
+          <p className="text-red-600">Inloggen mislukt</p>
         }
       </div>
     </div>

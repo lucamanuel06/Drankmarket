@@ -24,4 +24,13 @@ export class LoginService extends ApiService {
     
     return LoginType.LoggedIn
   }
+
+  logout() {
+    localStorage.removeItem(Constants.BarId)
+    this.user = null
+  }
+
+  isAdmin(): boolean {
+    return this.user?.isAdmin === true
+  }
 }
