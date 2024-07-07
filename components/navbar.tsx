@@ -18,10 +18,11 @@ export const Navbar = () => {
   const currentPage = usePathname();
   const showNavbar = currentPage === "/gat" || currentPage === "/spier";
 
-  const showAdminButton =
-    currentPage === Constants.AdminProducts ||
-    currentPage === Constants.AdminBars ||
-    currentPage === Constants.AdminData;
+  const showManageButton =
+    currentPage === Constants.ManageProducts ||
+    currentPage === Constants.ManageData;
+  const showAdminButton =currentPage === Constants.AdminBars
+  const buttonUrl = showManageButton ? Constants.Management : showAdminButton ? Constants.Admin : null
 
   return (
     <>
@@ -81,8 +82,8 @@ export const Navbar = () => {
           className="hidden sm:flex basis-1/5 sm:basis-full"
           justify="end"
         >
-          {showAdminButton && (
-            <Button isIconOnly as={Link} className="bg-blue-300" href={Constants.Admin}>
+          {buttonUrl && (
+            <Button isIconOnly as={Link} className="bg-blue-300" href={buttonUrl}>
               <svg
                 className="size-6"
                 fill="none"

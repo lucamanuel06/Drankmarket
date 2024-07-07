@@ -10,9 +10,21 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 
 import { siteConfig } from "./site";
+import { useServiceContext } from "@/app/providers";
 
 export default function TemporaryDrawer() {
+  let loginService = useServiceContext().loginService
   const [open, setOpen] = React.useState(false);
+  const [isAdmin, setAdmin] = React.useState(loginService.user?.isAdmin === true)
+
+
+  React.useEffect(() => {
+    async function checkIfAdmin() {
+      setAdmin(await loginService.isAdmin())
+    }
+
+    checkIfAdmin()
+  })
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -31,7 +43,7 @@ export default function TemporaryDrawer() {
       </List>
       <Divider />
       <List>
-        {siteConfig.adminItems.map((item) => (
+        {siteConfig.managementItems.map((item) => (
           <ListItem key={item.href} disablePadding>
             <ListItemButton href={item.href}>
               <ListItemText primary={item.label} />
@@ -39,6 +51,18 @@ export default function TemporaryDrawer() {
           </ListItem>
         ))}
       </List>
+      { isAdmin && <>
+        <Divider />
+        <List>
+          {siteConfig.adminItems.map((item) => (
+            <ListItem key={item.href} disablePadding>
+              <ListItemButton href={item.href}>
+                <ListItemText primary={item.label} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </>}
     </Box>
   );
 

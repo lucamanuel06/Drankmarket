@@ -23,22 +23,28 @@ export const siteConfig = {
       href: Constants.Logout,
     },
   ],
+  managementItems: [
+    {
+      label: "Beheer",
+      href: Constants.Management,
+    },
+    {
+      label: "Producten",
+      href: Constants.ManageProducts,
+    },
+    {
+      label: "Data",
+      href: Constants.ManageData,
+    },
+  ],
   adminItems: [
     {
       label: "Admin",
       href: Constants.Admin,
     },
     {
-      label: "Producten",
-      href: Constants.AdminProducts,
-    },
-    {
       label: "Barren",
       href: Constants.AdminBars,
-    },
-    {
-      label: "Data",
-      href: Constants.AdminData,
     },
   ]
 };

@@ -7,6 +7,7 @@ export const Constants = {
   Logout: "/logout",
   Admin: "/admin",
   AdminBars: "/admin/bars",
-  AdminProducts: "/admin/products",
-  AdminData: "/admin/data",
+  Management: "/manage",
+  ManageProducts: "/manage/products",
+  ManageData: "/manage/data",
 }

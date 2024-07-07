@@ -11,9 +11,15 @@ export default function Page() {
       <div className="flex justify-center gap-2">
         <Button
           className="py-16 px-40"
-          onPress={() => router.push(Constants.AdminBars)}
+          onPress={() => router.push(Constants.ManageProducts)}
         >
-          Beheer de barren
+          Beheer de producten
+        </Button>
+        <Button
+          className="py-16 px-40"
+          onPress={() => router.push(Constants.ManageData)}
+        >
+          Bekijk de data
         </Button>
       </div>
     </main>
