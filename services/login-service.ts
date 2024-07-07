@@ -31,6 +31,11 @@ export class LoginService extends ApiService {
     this.user = null
   }
 
+  getBarId(): string | null {
+    if (this.user !== null) return this.user.barId
+    return localStorage.getItem(Constants.BarId)
+  }
+
   async isAdmin(): Promise<boolean> {
     if (this.user !== null) return this.user.isAdmin
     

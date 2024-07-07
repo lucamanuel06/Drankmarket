@@ -3,6 +3,8 @@ import { Drink, mapResponseToDrink } from "@/models/drink"
 
 export class DrinkService extends ApiService {
 
+  public drinks: Array<Drink> | null = null
+
   constructor() {
     super("/drinks")
   }
@@ -13,7 +15,9 @@ export class DrinkService extends ApiService {
       value: barId,
     })
     let drinks: Array<any> = await response.json()
-    return drinks.map(mapResponseToDrink)
+    let mapped = drinks.map(mapResponseToDrink)
+    this.drinks = mapped
+    return mapped
   }
 
   async createDrink(

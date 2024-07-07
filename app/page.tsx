@@ -83,7 +83,7 @@ const LoginBox: React.FC<LoginInputProps> = ({ loginService, setLoggedIn }) => {
           </div>
         </div>
         <input 
-          value="Confirm"
+          value="Bevestig"
           onClick={async () => tryLogin()}
           className="bg-slate-500 p-1 rounded"
           type="button"
