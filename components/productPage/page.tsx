@@ -1,5 +1,12 @@
 "use client";
-import { Button } from "@nextui-org/react";
+import { Button, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from "@nextui-org/react";
 import React, { useState } from "react";
 
 const categories = [
@@ -15,6 +22,9 @@ const categories = [
 
 const POSLayout: React.FC = () => {
   const [number, setNumber] = useState("");
+  const [itemList, setItemList] = useState<{ name: string; quantity: number }[]>([]);
+  const [selectedItem, setSelectedItem] = useState<{ name: string; quantity: number } | null>(null);
+  const [modalQuantity, setModalQuantity] = useState<string>("");
 
   const handleButtonClick = (value: string) => {
     if (value === "Backspace") {
@@ -23,6 +33,72 @@ const POSLayout: React.FC = () => {
       setNumber(number + value);
     }
   };
+
+  const handleModalButtonClick = (value: string) => {
+    if (value === "Backspace") {
+      setModalQuantity(modalQuantity.slice(0, -1));
+    } else {
+      setModalQuantity(modalQuantity + value);
+    }
+  };
+
+  const handleProductClick = (productName: string) => {
+    const quantity = number ? parseInt(number, 10) : 1;
+
+    setItemList((prevItemList) => {
+      const existingItem = prevItemList.find((item) => item.name === productName);
+
+      if (existingItem) {
+        return prevItemList.map((item) =>
+          item.name === productName ? { ...item, quantity: item.quantity + quantity } : item
+        );
+      } else {
+        return [...prevItemList, { name: productName, quantity }];
+      }
+    });
+    setNumber("");
+  };
+
+  const increaseQuantity = (productName: string) => {
+    setItemList((prevItemList) =>
+      prevItemList.map((item) =>
+        item.name === productName ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
+  };
+
+  const decreaseQuantity = (productName: string) => {
+    setItemList((prevItemList) =>
+      prevItemList.map((item) =>
+        item.name === productName && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
+  };
+
+  const openModal = (item: { name: string; quantity: number }) => {
+    setSelectedItem(item);
+    setModalQuantity(item.quantity.toString());
+    onOpen();
+  };
+
+  const handleModalSave = () => {
+    if (selectedItem) {
+      const quantity = parseInt(modalQuantity, 10);
+
+      if (!isNaN(quantity)) {
+        setItemList((prevItemList) =>
+          prevItemList.map((item) =>
+            item.name === selectedItem.name ? { ...item, quantity } : item
+          )
+        );
+      }
+    }
+    onOpenChange();
+  };
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 p-4">
@@ -34,7 +110,56 @@ const POSLayout: React.FC = () => {
         >
           <div className="bg-white flex justify-between flex-col text-black p-4 shadow-md flex-1">
             <div className="flex items-center mb-4">
-              <div className="text-xl">Item List</div>
+              <ul className="w-full">
+                {itemList.map((item, index) => (
+                  <li key={index}>
+                    <Popover placement="bottom" radius="none" className="bg-gray-500">
+                      <PopoverTrigger>
+                        <button className="grid grid-cols-4 w-full border-b-3 p-4">
+                          <div>
+                            <p>{item.name}</p>
+                          </div>
+                          <div>
+                            <p>{item.quantity + `x`}</p>
+                          </div>
+                          <div>
+                            <p>€</p>
+                          </div>
+                          <div>
+                            <p>€</p>
+                          </div>
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="flex flex-row gap-2 p-0 justify-between w-56">
+                        <button onClick={() => increaseQuantity(item.name)}>
+                          +
+                          <div className="p-1">
+                            Meer
+                          </div>
+                        </button>
+                        <button onClick={() => decreaseQuantity(item.name)}>
+                          -
+                          <div>
+                            <p>Minder</p>
+                          </div>
+                        </button>
+                        <button onClick={() => openModal(item)} className="block">
+                          ±
+                          <div>
+                            <p>Wijzig</p>
+                          </div>
+                        </button>
+                        <button className="bg-red-500 block p-1">
+                          🗑️
+                          <div>
+                            <p>verwijder</p>
+                          </div>
+                        </button>
+                      </PopoverContent>
+                    </Popover>
+                  </li>
+                ))}
+              </ul>
             </div>
             <div className="border-3 flex flex-row justify-between items-center p-4">
               <div className="relative flex justify-center items-center w-full">
@@ -82,7 +207,12 @@ const POSLayout: React.FC = () => {
                 </div>
                 <div className="flex flex-col bg-gray-200 p-2">
                   {category.items.map((item) => (
-                    <Button key={item} radius="none" className="p-2 bg-white text-black  mt-1">
+                    <Button
+                      key={item}
+                      radius="none"
+                      className="p-2 bg-white text-black mt-1"
+                      onClick={() => handleProductClick(item)}
+                    >
                       {item}
                     </Button>
                   ))}
@@ -92,6 +222,42 @@ const POSLayout: React.FC = () => {
           </div>
         </div>
       </div>
+      {selectedItem && (
+        <Modal backdrop="opaque" isDismissable radius="none" isOpen={isOpen} onOpenChange={onOpenChange}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader>Wijzig aantal</ModalHeader>
+                <ModalBody>
+                  <div className="flex flex-col gap-4">
+                    <div className="text-center text-lg mb-4">{selectedItem.name}</div>
+                    <div className="text-center text-lg mb-4">{modalQuantity}</div>
+                    <div className="grid grid-cols-4 gap-2 md:gap-4 p-4">
+                      {["7", "8", "9", "0", "4", "5", "6", "00", "1", "2", "3", "Backspace"].map((num) => (
+                        <Button
+                          key={num}
+                          className="p-2 md:p-4 bg-gray-700 text-white rounded w-full"
+                          onClick={() => handleModalButtonClick(num)}
+                        >
+                          {num === "Backspace" ? "⌫" : num}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </ModalBody>
+                <ModalFooter>
+                  <Button className="text-blue-500" variant="light" onPress={onClose}>
+                    Annuleren
+                  </Button>
+                  <Button className="text-blue-500" variant="light" onPress={handleModalSave}>
+                    Opslaan
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      )}
     </div>
   );
 };
