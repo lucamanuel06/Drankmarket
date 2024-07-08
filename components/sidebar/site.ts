@@ -1,3 +1,5 @@
+import { Constants } from "@/generic/constants";
+
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
@@ -6,7 +8,7 @@ export const siteConfig = {
   navItems: [
     {
       label: "Faciliteiten",
-      href: "/",
+      href: Constants.Home,
     },
     {
       label: "Gat",
@@ -18,25 +20,31 @@ export const siteConfig = {
     },
     {
       label: "Log uit",
-      href: "/logout",
+      href: Constants.Logout,
+    },
+  ],
+  managementItems: [
+    {
+      label: "Beheer",
+      href: Constants.Management,
+    },
+    {
+      label: "Producten",
+      href: Constants.ManageProducts,
+    },
+    {
+      label: "Data",
+      href: Constants.ManageData,
     },
   ],
   adminItems: [
     {
       label: "Admin",
-      href: "/admin/",
-    },
-    {
-      label: "Producten",
-      href: "/admin/producten",
+      href: Constants.Admin,
     },
     {
       label: "Barren",
-      href: "/admin/barren",
-    },
-    {
-      label: "Data",
-      href: "/admin/data",
+      href: Constants.AdminBars,
     },
   ]
 };

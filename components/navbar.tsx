@@ -10,28 +10,19 @@ import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 import Link from "next/link";
-
 import { siteConfig } from "@/config/site";
 import SideBar from "@/components/sidebar/page";
+import { Constants } from "@/generic/constants";
 
 export const Navbar = () => {
   const currentPage = usePathname();
   const showNavbar = currentPage === "/gat" || currentPage === "/spier";
 
-  const showBurger = currentPage === "/" || showNavbar;
-
-  const showAdmin =
-    currentPage === "/admin" ||
-    currentPage === "/admin/producten" ||
-    currentPage === "/admin/barren" ||
-    currentPage === "/admin/data" ||
-    showBurger;
-
-  const showAdminButton =
-    currentPage === "/admin" ||
-    currentPage === "/admin/producten" ||
-    currentPage === "/admin/barren" ||
-    currentPage === "/admin/data";
+  const showManageButton =
+    currentPage === Constants.ManageProducts ||
+    currentPage === Constants.ManageData;
+  const showAdminButton =currentPage === Constants.AdminBars
+  const buttonUrl = showManageButton ? Constants.Management : showAdminButton ? Constants.Admin : null
 
   return (
     <>
@@ -40,11 +31,9 @@ export const Navbar = () => {
         maxWidth="full"
         position="sticky"
       >
-        {showAdmin && (
-          <NavbarContent justify="start">
-            <SideBar />
-          </NavbarContent>
-        )}
+        <NavbarContent justify="start">
+          <SideBar />
+        </NavbarContent>
         <NavbarContent className="basis-1/5 sm:basis-full" justify="center">
           {showNavbar && (
             <ul className="hidden lg:flex gap-4 justify-start ml-2">
@@ -93,8 +82,8 @@ export const Navbar = () => {
           className="hidden sm:flex basis-1/5 sm:basis-full"
           justify="end"
         >
-          {showAdminButton && (
-            <Button isIconOnly as={Link} className="bg-blue-300" href="/admin">
+          {buttonUrl && (
+            <Button isIconOnly as={Link} className="bg-blue-300" href={buttonUrl}>
               <svg
                 className="size-6"
                 fill="none"

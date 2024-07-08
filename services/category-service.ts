@@ -3,6 +3,8 @@ import { Category, mapResponseToCategory } from "@/models/category"
 
 export class CategoryService extends ApiService {
 
+  public categories: Array<Category> | null = null
+
   constructor() {
     super("/category")
   }
@@ -13,7 +15,9 @@ export class CategoryService extends ApiService {
       value: barId,
     })
     let categories: Array<any> = await response.json()
-    return categories.map(mapResponseToCategory)
+    let mapped = categories.map(mapResponseToCategory)
+    this.categories = mapped
+    return mapped
   }
 
   async createCategory(name: string, barId: string): Promise<Category> {
@@ -22,17 +26,43 @@ export class CategoryService extends ApiService {
       "bar_id": barId,
     })
     let created = await response.json()
-    return mapResponseToCategory(created)
+    let mapped = mapResponseToCategory(created)
+    if (this.categories !== null) {
+      this.categories = [mapped, ...this.categories]
+    }
+    return mapped
   }
 
   async updateCategory(id: string, newName: string) {
+    if (this.categories !== null) {
+      this.categories = this.categories.map((item) => {
+        if (item.id === id) {
+          return {
+            id: item.id,
+            name: newName,
+            barId: item.barId,
+          }
+        } else {
+          return item
+        }
+      })
+    }
     await this.doRequest("PUT", {
       "id": id,
       "name": newName,
     })
   }
 
-  async deleteCategory(id: string) {
-    await this.doRequest("DELETE", { "id": id })
+  async deleteCategory(id: string): Promise<boolean> {
+    try {
+      await this.doRequest("DELETE", { "id": id })
+      if (this.categories !== null) {
+        this.categories = this.categories.filter((item) => item.id !== id)
+      }
+      return true
+    } catch {
+      console.error(`Deleting category with id: ${id} failed`)
+      return false
+    }
   }
 }

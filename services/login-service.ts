@@ -1,3 +1,4 @@
+import apiConfig from "@/api-config.json"
 import { Constants } from "@/generic/constants"
 import { ApiService} from "./api-service"
 import { LoginType, User, mapResponseToUser } from "@/models/login"
@@ -30,7 +31,21 @@ export class LoginService extends ApiService {
     this.user = null
   }
 
-  isAdmin(): boolean {
-    return this.user?.isAdmin === true
+  getBarId(): string | null {
+    if (this.user !== null) {
+      return this.user.barId
+    }
+    return localStorage.getItem(Constants.BarId)
+  }
+
+  async isAdmin(): Promise<boolean> {
+    if (this.user !== null) return this.user.isAdmin
+    
+    let storedBarId = localStorage.getItem(Constants.BarId)
+    if (storedBarId === null) return false
+    
+    let response = await fetch(`${apiConfig["api_base_url"]}/bar?id=${storedBarId}`)
+    let responseBody = await response.json()
+    return responseBody["super_admin"] === 1
   }
 }
