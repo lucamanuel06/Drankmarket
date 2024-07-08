@@ -53,10 +53,16 @@ export class CategoryService extends ApiService {
     })
   }
 
-  async deleteCategory(id: string) {
-    if (this.categories !== null) {
-      this.categories = this.categories.filter((item) => item.id !== id)
+  async deleteCategory(id: string): Promise<boolean> {
+    try {
+      await this.doRequest("DELETE", { "id": id })
+      if (this.categories !== null) {
+        this.categories = this.categories.filter((item) => item.id !== id)
+      }
+      return true
+    } catch {
+      console.error(`Deleting category with id: ${id} failed`)
+      return false
     }
-    await this.doRequest("DELETE", { "id": id })
   }
 }

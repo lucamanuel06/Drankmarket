@@ -32,7 +32,7 @@ export class DrinkService extends ApiService {
   ): Promise<Drink> {
     let response = await this.doRequest("POST", {
       "name": name,
-      "barId": barId,
+      "bar_id": barId,
       "start_price": startPrice,
       "current_price": currentPrice,
       "rise_multiplier": riseMultiplier,
@@ -41,13 +41,18 @@ export class DrinkService extends ApiService {
       "category_id": categoryId,
     })
     let createdDrink = await response.json()
-    return mapResponseToDrink(createdDrink)
+    let mapped = mapResponseToDrink(createdDrink)
+    if (this.drinks !== null) {
+      this.drinks = [mapped, ...this.drinks]
+    }
+    return mapped
   }
 
   async updateDrink(updatedDrink: Drink): Promise<Drink> {
     let response = await this.doRequest("PUT", {
+      "id": updatedDrink.id,
       "name": updatedDrink.name,
-      "barId": updatedDrink.barId,
+      "bar_id": updatedDrink.barId,
       "start_price": updatedDrink.startPrice,
       "current_price": updatedDrink.currentPrice,
       "rise_multiplier": updatedDrink.riseMultiplier,
@@ -56,10 +61,23 @@ export class DrinkService extends ApiService {
       "category_id": updatedDrink.categoryId,
     })
     let drink = await response.json()
-    return mapResponseToDrink(drink)
+    let mapped = mapResponseToDrink(drink)
+    if (this.drinks !== null) {
+      this.drinks = this.drinks.map((item) => item.id === mapped.id ? mapped : item)
+    }
+    return mapped
   }
 
-  async deleteDrink(id: string) {
-    await this.doRequest("DELETE", { "id": id })
+  async deleteDrink(id: string): Promise<boolean> {
+    try {
+      await this.doRequest("DELETE", { "id": id })
+      if (this.drinks !== null) {
+        this.drinks = this.drinks.filter((drink) => drink.id !== id)
+      }
+      return true
+    } catch {
+      console.error(`An error occurred while deleting drink with id: ${id}`)
+      return false
+    }
   }
 }

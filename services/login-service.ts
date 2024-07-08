@@ -32,7 +32,9 @@ export class LoginService extends ApiService {
   }
 
   getBarId(): string | null {
-    if (this.user !== null) return this.user.barId
+    if (this.user !== null) {
+      return this.user.barId
+    }
     return localStorage.getItem(Constants.BarId)
   }
 

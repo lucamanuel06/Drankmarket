@@ -3,39 +3,24 @@ import React from "react"
 import { useServiceContext } from "@/app/providers"
 import { Category } from "@/models/category"
 
-export default function ManageCategories() {
-  let loginService = useServiceContext().loginService
+type ManageCategoriesProps = {
+  categories: Array<Category>
+  setCategories: (categories: Array<Category>) => void
+  selectedId: string
+  setSelectedId: (id: string) => void
+  loadingFailed: boolean
+  barId: string
+}
+
+export default function ManageCategories({
+  categories, setCategories, selectedId, setSelectedId, loadingFailed, barId
+}: ManageCategoriesProps) {
   let categoryService = useServiceContext().categoryService
-  let barId = loginService.getBarId()
 
   const [createNew, setCreateNew] = React.useState(false)
   const [newName, setNewName] = React.useState("")
   const [updateName, setUpdateName] = React.useState(false)
   const [nameToUpdate, setNameToUpdate] = React.useState("")
-
-  let initialCategories: Array<Category> = []
-  const [categories, setCategories] = React.useState(initialCategories)
-  const [categoriesFailed, setCategoriesFailed] = React.useState(false)
-  const [selectedId, setSelectedId] = React.useState("")
-
-  React.useEffect(() => {
-    async function fetchCategories(barId: string) {
-      if (categoryService.categories !== null) {
-        setCategories(categoryService.categories)
-        return
-      }
-
-      try {
-        setCategories(await categoryService.getCategories(barId))
-      } catch {
-        setCategoriesFailed(true)
-      }
-    }
-
-    if (barId !== null) {
-      fetchCategories(barId)
-    }
-  }, [barId])
 
   async function newCategory() {
     if (barId !== null) {
@@ -74,12 +59,14 @@ export default function ManageCategories() {
           className="bg-slate-500 p-1 rounded"
           type="button"
         />
-        <input 
-          value="Verwijder"
-          onClick={deleteCategory}
-          className="bg-slate-500 p-1 rounded"
-          type="button"
-        />
+        { selectedId.length > 0 &&
+          <input 
+            value="Verwijder"
+            onClick={deleteCategory}
+            className="bg-slate-500 p-1 rounded"
+            type="button"
+          />
+        }
         { selectedId.length > 0 &&
           <input 
             value="Update"
@@ -112,7 +99,7 @@ export default function ManageCategories() {
             />
         </div>
       }
-      { updateName &&
+      { updateName && selectedId.length > 0 &&
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <label htmlFor="new-cat-field">Nieuwe naam:</label>
@@ -133,11 +120,11 @@ export default function ManageCategories() {
         </div>
       }
       <div className="bg-stone-800 w-fill flex flex-col overflow-y-auto" style={{"flex": 1}}>
-        { categoriesFailed &&
+        { loadingFailed &&
           <p className="p-2 text-red-600">Categorieën ophalen is mislukt</p>
         }
         { categories.map((item) => (
-          <CategoryItem 
+          <CategoryItem
             isSelected={selectedId === item.id} 
             name={item.name} 
             onClick={() => {
