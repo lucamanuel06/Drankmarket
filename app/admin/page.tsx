@@ -10,13 +10,13 @@ export default function Page() {
       <div className="flex justify-center gap-2">
         <Button
           className="py-16 px-40"
-          onPress={() => router.push("admin/producten")}
+          onPress={() => router.push("admin/bars")}
         >
           Beheer de barren
         </Button>
         <Button
           className="py-16 px-40"
-          onPress={() => router.push("admin/barren")}
+          onPress={() => router.push("admin/products")}
         >
           Beheer de producten
         </Button>

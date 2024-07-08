@@ -16,6 +16,10 @@ export const siteConfig = {
       label: "Spier",
       href: "/spier",
     },
+    {
+      label: "Log uit",
+      href: "/logout",
+    },
   ],
   adminItems: [
     {
