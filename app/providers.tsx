@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { NextUIProvider } from "@nextui-org/system";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { BarService } from "@/services/bar-service"
@@ -11,6 +11,7 @@ import { DeviceService } from "@/services/device-service"
 import { DrinkService } from "@/services/drink-service";
 import { CategoryService } from "@/services/category-service";
 import { OrderService } from "@/services/order-service";
+import { Constants } from "@/generic/constants";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -41,7 +42,14 @@ export const useServiceContext = () => React.useContext(ServiceContext)
 
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
+  const pathName = usePathname()
 
+  React.useEffect(() => {
+    if (services.loginService.getBarId() === null && pathName !== Constants.Home) {
+      router.push(Constants.Home)
+    }
+  })
+  
   return (
     <NextUIProvider navigate={router.push}>
       <ServiceContext.Provider value={services}>
