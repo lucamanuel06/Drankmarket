@@ -42,9 +42,19 @@ export const useServiceContext = () => React.useContext(ServiceContext)
 
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
+  const loginService = services.loginService
   const pathName = usePathname()
 
   React.useEffect(() => {
+    async function sendPlebsHome() {
+      let isAdmin = await loginService.isAdmin()
+      if (!isAdmin) router.push(Constants.Home)
+    }
+
+    if (pathName.includes(Constants.Admin)) {
+      sendPlebsHome()
+    }
+
     if (services.loginService.getBarId() === null && pathName !== Constants.Home) {
       router.push(Constants.Home)
     }
