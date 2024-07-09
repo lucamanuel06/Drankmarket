@@ -10,7 +10,6 @@ import {
 } from "./stocks-drink"
 import { RiseIcon, DropIcon, EqualIcon } from "./stock-icons"
 import { Constants } from "@/generic/constants"
-import { Category } from "@/models/category"
 
 export default function Page() {
   let context = useServiceContext()
@@ -20,7 +19,6 @@ export default function Page() {
   let barId = loginService.getBarId()
 
   const [isLoaded, setLoaded] = React.useState(false)
-  const [categories, setCategories] = React.useState([] as Category[])
   const [drinkColumns, setDrinkColumns] = React.useState([] as DrinkStock[][])
   const [loadingFailed, setLoadingFailed] = React.useState(false)
   let stockHeight = calcStockHeight(drinkColumns)
@@ -37,7 +35,6 @@ export default function Page() {
           return newStock
         })
         let columns = mapStocksToColumns(newStocks)
-        setCategories(newCategories)
         setDrinkColumns(columns)
       } catch {
         setLoadingFailed(true)
