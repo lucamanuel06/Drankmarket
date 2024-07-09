@@ -36,7 +36,9 @@ export default function Page() {
       }
     }
 
-    retrieveBars()
+    if (bars.length === 0) {
+      retrieveBars()
+    }
   })
 
   function selectBar(id: string) {
