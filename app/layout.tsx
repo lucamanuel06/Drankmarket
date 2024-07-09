@@ -71,7 +71,7 @@ export default function RootLayout({
             <Navbar />
             {children}
             <footer className="w-full flex items-center justify-center py-3">
-              <p>Developed by Mitchell & Luca</p>
+              <p>Developed by Mitchell Tol & Luca Manuel</p>
             </footer>
           </div>
         </Providers>
