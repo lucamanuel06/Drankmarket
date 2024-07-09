@@ -20,10 +20,11 @@ export class CategoryService extends ApiService {
     return mapped
   }
 
-  async createCategory(name: string, barId: string): Promise<Category> {
+  async createCategory(name: string, color: string, barId: string): Promise<Category> {
     let response = await this.doRequest("POST", {
       "name": name,
       "bar_id": barId,
+      "color": color,
     })
     let created = await response.json()
     let mapped = mapResponseToCategory(created)
@@ -33,7 +34,7 @@ export class CategoryService extends ApiService {
     return mapped
   }
 
-  async updateCategory(id: string, newName: string) {
+  async updateCategory(id: string, newName: string, newColor: string) {
     if (this.categories !== null) {
       this.categories = this.categories.map((item) => {
         if (item.id === id) {
@@ -41,6 +42,7 @@ export class CategoryService extends ApiService {
             id: item.id,
             name: newName,
             barId: item.barId,
+            color: newColor,
           }
         } else {
           return item
@@ -50,6 +52,7 @@ export class CategoryService extends ApiService {
     await this.doRequest("PUT", {
       "id": id,
       "name": newName,
+      "color": newColor,
     })
   }
 

@@ -17,14 +17,16 @@ export default function ManageCategories({
 }: ManageCategoriesProps) {
   let categoryService = useServiceContext().categoryService
 
-  const [createNew, setCreateNew] = React.useState(false)
+  const [create, setCreate] = React.useState(false)
   const [newName, setNewName] = React.useState("")
-  const [updateName, setUpdateName] = React.useState(false)
+  const [newColor, setNewColor] = React.useState("#000000")
+  const [update, setUpdate] = React.useState(false)
   const [nameToUpdate, setNameToUpdate] = React.useState("")
+  const [updateColor, setColorToUpdate] = React.useState("#000000")
 
   async function newCategory() {
     if (barId !== null) {
-      await categoryService.createCategory(newName, barId)
+      await categoryService.createCategory(newName, newColor, barId)
       if (categoryService.categories !== null) {
         setCategories(categoryService.categories)
       }
@@ -32,7 +34,7 @@ export default function ManageCategories({
   }
 
   async function updateCategory() {
-    await categoryService.updateCategory(selectedId, nameToUpdate)
+    await categoryService.updateCategory(selectedId, nameToUpdate, updateColor)
     if (categoryService.categories !== null) {
       setCategories(categoryService.categories)
     }
@@ -51,10 +53,10 @@ export default function ManageCategories({
       <h2>Product Categorieën</h2>
       <div className="flex gap-2">
         <input 
-          value={createNew ? "Annuleren" : "Nieuw"}
+          value={create ? "Annuleren" : "Nieuw"}
           onClick={() => {
-            setUpdateName(false)
-            setCreateNew(!createNew)
+            setUpdate(false)
+            setCreate(!create)
           }}
           className="bg-slate-500 p-1 rounded"
           type="button"
@@ -69,19 +71,19 @@ export default function ManageCategories({
         }
         { selectedId.length > 0 &&
           <input 
-            value="Update"
+            value={update ? "Annuleren" : "Update"}
             onClick={() => {
-              setCreateNew(false)
-              setUpdateName(!updateName)
+              setCreate(false)
+              setUpdate(!update)
             }}
             className="bg-slate-500 p-1 rounded"
             type="button"
           />
         }
       </div>
-      { createNew &&
+      { create &&
         <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-2">
             <label htmlFor="new-cat-field">Naam:</label>
             <input 
               value={newName}
@@ -90,33 +92,49 @@ export default function ManageCategories({
               id="new-cat-field"
               type="text"
             />
-          </div>
+            <label htmlFor="new-color-field">Kleur:</label>
             <input 
-              value="Bevestig"
-              onClick={newCategory}
-              className="bg-slate-500 p-1 rounded"
-              type="button"
+              value={newColor}
+              onChange={(e) => setNewColor(e.target.value)}
+              className="bg-gray-400 text-black"
+              id="new-color-field"
+              type="color"
             />
+          </div>
+          <input 
+            value="Bevestig"
+            onClick={newCategory}
+            className="bg-slate-500 p-1 rounded"
+            type="button"
+          />
         </div>
       }
-      { updateName && selectedId.length > 0 &&
+      { update && selectedId.length > 0 &&
         <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <label htmlFor="new-cat-field">Nieuwe naam:</label>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="update-cat-field">Nieuwe naam:</label>
             <input 
               value={nameToUpdate}
               onChange={(e) => setNameToUpdate(e.target.value)}
               className="bg-gray-400 text-black"
-              id="new-cat-field"
+              id="update-cat-field"
               type="text"
             />
-          </div>
+            <label htmlFor="update-color-field">Nieuwe kleur:</label>
             <input 
-              value="Bevestig"
-              onClick={updateCategory}
-              className="bg-slate-500 p-1 rounded"
-              type="button"
+              value={updateColor}
+              onChange={(e) => setColorToUpdate(e.target.value)}
+              className="bg-gray-400 text-black"
+              id="update-color-field"
+              type="color"
             />
+          </div>
+          <input 
+            value="Bevestig"
+            onClick={updateCategory}
+            className="bg-slate-500 p-1 rounded"
+            type="button"
+          />
         </div>
       }
       <div className="bg-stone-800 w-fill flex flex-col overflow-y-auto" style={{"flex": 1}}>
@@ -130,6 +148,7 @@ export default function ManageCategories({
             onClick={() => {
               setSelectedId(selectedId === item.id ? "" : item.id)
               setNameToUpdate(item.name)
+              setColorToUpdate(item.color)
             }}
             key={item.id}
           />

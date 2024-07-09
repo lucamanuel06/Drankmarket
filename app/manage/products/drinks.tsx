@@ -82,6 +82,7 @@ export default function ManageDrinks({ drinks, categoryId, updateDrinks, loadFai
   }
 
   async function deleteDrink() {
+    selectDrink("")
     await drinkService.deleteDrink(selectedId)
     if (drinkService.drinks !== null) {
       updateDrinks(drinkService.drinks)
