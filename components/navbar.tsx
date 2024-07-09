@@ -16,6 +16,8 @@ import { Constants } from "@/generic/constants";
 
 export const Navbar = () => {
   const currentPage = usePathname();
+  const isStocksPage = currentPage === Constants.Stocks
+
   const showNavbar = currentPage === "/gat" || currentPage === "/spier";
 
   const showManageButton =
@@ -26,82 +28,84 @@ export const Navbar = () => {
 
   return (
     <>
-      <NextUINavbar
-        className="bg-blue-500 mb-2"
-        maxWidth="full"
-        position="sticky"
-      >
-        <NavbarContent justify="start">
-          <SideBar />
-        </NavbarContent>
-        <NavbarContent className="basis-1/5 sm:basis-full" justify="center">
-          {showNavbar && (
-            <ul className="hidden lg:flex gap-4 justify-start ml-2">
-              {siteConfig.navItems.map((item) => (
-                <NavbarItem key={item.href}>
-                  <NextLink
-                    className={clsx(
-                      linkStyles({ color: "foreground" }),
-                      "data-[active=true]:text-primary data-[active=true]:font-medium bg-blue-300 py-2 px-3 rounded-full",
-                    )}
-                    color="foreground"
-                    href={item.href}
-                  >
-                    {item.label}
-                  </NextLink>
-                </NavbarItem>
-              ))}
-            </ul>
-          )}
-        </NavbarContent>
+      { !isStocksPage &&
+        <NextUINavbar
+          className="bg-blue-500 mb-2"
+          maxWidth="full"
+          position="sticky"
+        >
+          <NavbarContent justify="start">
+            <SideBar />
+          </NavbarContent>
+          <NavbarContent className="basis-1/5 sm:basis-full" justify="center">
+            {showNavbar && (
+              <ul className="hidden lg:flex gap-4 justify-start ml-2">
+                {siteConfig.navItems.map((item) => (
+                  <NavbarItem key={item.href}>
+                    <NextLink
+                      className={clsx(
+                        linkStyles({ color: "foreground" }),
+                        "data-[active=true]:text-primary data-[active=true]:font-medium bg-blue-300 py-2 px-3 rounded-full",
+                      )}
+                      color="foreground"
+                      href={item.href}
+                    >
+                      {item.label}
+                    </NextLink>
+                  </NavbarItem>
+                ))}
+              </ul>
+            )}
+          </NavbarContent>
 
-        <NavbarContent
-          className="hidden sm:flex basis-1/5 sm:basis-full"
-          justify="end"
-        >
-          {showNavbar && (
-            <Button isIconOnly as={Link} className="bg-blue-300" href="/">
-              <svg
-                className="size-6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
-          )}
-        </NavbarContent>
-        <NavbarContent
-          className="hidden sm:flex basis-1/5 sm:basis-full"
-          justify="end"
-        >
-          {buttonUrl && (
-            <Button isIconOnly as={Link} className="bg-blue-300" href={buttonUrl}>
-              <svg
-                className="size-6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
-          )}
-        </NavbarContent>
-      </NextUINavbar>
+          <NavbarContent
+            className="hidden sm:flex basis-1/5 sm:basis-full"
+            justify="end"
+          >
+            {showNavbar && (
+              <Button isIconOnly as={Link} className="bg-blue-300" href="/">
+                <svg
+                  className="size-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Button>
+            )}
+          </NavbarContent>
+          <NavbarContent
+            className="hidden sm:flex basis-1/5 sm:basis-full"
+            justify="end"
+          >
+            {buttonUrl && (
+              <Button isIconOnly as={Link} className="bg-blue-300" href={buttonUrl}>
+                <svg
+                  className="size-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Button>
+            )}
+          </NavbarContent>
+        </NextUINavbar>
+      }
     </>
   );
 };
