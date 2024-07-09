@@ -1,5 +1,6 @@
 import { Drink } from "@/models/drink"
 import { Constants } from "@/generic/constants"
+import { Category } from "@/models/category"
 
 export enum Fluctuation {
   Equal,
@@ -13,9 +14,17 @@ export type DrinkStock = {
   fluctuation: Fluctuation
 }
 
-export function toNewStock(newDrink: Drink, oldStock: DrinkStock | undefined): DrinkStock {
-  if (oldStock == null) {
-    return mapDrinkToStock(newDrink, Fluctuation.Equal)
+export function toNewStock(
+  newDrink: Drink, 
+  category: Category | undefined,
+  oldStock: DrinkStock | undefined,
+): DrinkStock {
+  if (oldStock == null || category == null) {
+    return mapDrinkToStock(
+      newDrink, 
+      category == null ? "#FFFFFF" : category.color, 
+      oldStock == null ? Fluctuation.Equal : oldStock.fluctuation,
+    )
   }
 
   let fluctuation = Fluctuation.Equal
@@ -27,16 +36,16 @@ export function toNewStock(newDrink: Drink, oldStock: DrinkStock | undefined): D
 
   return {
     data: newDrink,
-    color: oldStock.color,
+    color: category.color,
     fluctuation: fluctuation,
   }
 }
 
-export function mapDrinkToStock(drink: Drink, fluctuation: Fluctuation): DrinkStock {
+export function mapDrinkToStock(drink: Drink, color: string, fluctuation: Fluctuation): DrinkStock {
   return {
     data: drink,
-    color: "FFFFFF",  // TODO: give color based on category
-    fluctuation: Fluctuation.Equal
+    color: color,
+    fluctuation: fluctuation
   }
 }
 

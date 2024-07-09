@@ -10,14 +10,17 @@ import {
 } from "./stocks-drink"
 import { RiseIcon, DropIcon, EqualIcon } from "./stock-icons"
 import { Constants } from "@/generic/constants"
+import { Category } from "@/models/category"
 
 export default function Page() {
   let context = useServiceContext()
   let loginService = context.loginService
   let drinkService = context.drinkService
+  let categoryService = context.categoryService
   let barId = loginService.getBarId()
 
   const [isLoaded, setLoaded] = React.useState(false)
+  const [categories, setCategories] = React.useState([] as Category[])
   const [drinkColumns, setDrinkColumns] = React.useState([] as DrinkStock[][])
   const [loadingFailed, setLoadingFailed] = React.useState(false)
   let stockHeight = calcStockHeight(drinkColumns)
@@ -25,13 +28,16 @@ export default function Page() {
   React.useEffect(() => {
     async function getDrinks(bar: string) {
       try {
+        let newCategories = await categoryService.getCategories(bar)
         let newDrinks = await drinkService.getDrinks(bar)
         let newStocks = newDrinks.map((drink) =>{
+          let category = newCategories.find((item) => item.id === drink.categoryId)
           let oldStock = drinkColumns.flat().find((stock) => stock.data.id === drink.id)
-          let newStock = toNewStock(drink, oldStock)
+          let newStock = toNewStock(drink, category, oldStock)
           return newStock
         })
         let columns = mapStocksToColumns(newStocks)
+        setCategories(newCategories)
         setDrinkColumns(columns)
       } catch {
         setLoadingFailed(true)
@@ -42,7 +48,7 @@ export default function Page() {
       if (barId !== null) {
         getDrinks(barId)
         setLoaded(true)
-        console.log("refreshed")
+        console.log("Refreshed the stocks")
       }
     }, isLoaded ? Constants.StocksRefreshInterval : 0)
   })
@@ -80,6 +86,8 @@ type DrinkRowProps = {
 }
 
 function DrinkRow({ drink, height }: DrinkRowProps) {
+  let categoryColor = drink.color
+
   let textHeight = `${parseInt(height.replace("%", "")) * 0.5}cqh`
   let textColor = "#FFFFFF"
   switch (drink.fluctuation) {
@@ -96,8 +104,8 @@ function DrinkRow({ drink, height }: DrinkRowProps) {
   return (
     <div className="flex w-full justify-between items-center p-2 border-1 border-white" style={{ "height": height }}>
       <div className="flex gap-4 items-center">
-        <div style={{ "fontSize": textHeight }}>{drink.data.tag}</div>
-        <div style={{ "fontSize": textHeight }}>{drink.data.name}</div>
+        <div style={{ "fontSize": textHeight, "color": categoryColor }}>{drink.data.tag}</div>
+        <div style={{ "fontSize": textHeight, "color": categoryColor }}>{drink.data.name}</div>
       </div>
       <div className="flex gap-2 items-center h-min">
         <div style={{ "fontSize": textHeight, "color": textColor }}>{drink.data.currentPrice}</div>
