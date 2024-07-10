@@ -7,20 +7,12 @@ export const siteConfig = {
   description: "Navitems voor de sidebar.",
   navItems: [
     {
-      label: "Beurs",
-      href: Constants.Stocks,
-    },
-    {
       label: "Faciliteiten",
       href: Constants.Home,
     },
     {
-      label: "Gat",
-      href: "/gat",
-    },
-    {
-      label: "Spier",
-      href: "/spier",
+      label: "Beurs",
+      href: Constants.Stocks,
     },
     {
       label: "Log uit",

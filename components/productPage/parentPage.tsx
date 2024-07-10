@@ -5,7 +5,11 @@ import { Drink } from "@/models/drink";
 import { Category } from "@/models/category";
 import { useServiceContext } from "@/app/providers";
 
-const ParentComponent = () => {
+type ProductPageProps = {
+  deviceId: string
+}
+
+const ParentComponent = ({ deviceId }: ProductPageProps) => {
   let context = useServiceContext();
   let loginService = context.loginService;
   let categoryService = context.categoryService;
@@ -55,7 +59,7 @@ const ParentComponent = () => {
     }
   }, [barId, categoryService, drinkService]);
 
-  return <POSLayout drinks={drinks} categories={categories} barId={barId} />;
+  return <POSLayout drinks={drinks} categories={categories} deviceId={deviceId} barId={barId} />;
 };
 
 export default ParentComponent;

@@ -16,6 +16,7 @@ import { OrderService } from "@/services/order-service";
 type ManageDrinksProps = {
   drinks: Array<Drink>;
   categories: Array<Category>;
+  deviceId: string;
   barId: string;
 };
 
@@ -25,7 +26,7 @@ const categoryColors: { [key: string]: string } = {
   "Wijn": "bg-blue-700",
 };
 
-const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, barId }) => {
+const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId, barId }) => {
   const [number, setNumber] = useState("");
   const [itemList, setItemList] = useState<{ name: string; quantity: number; price: number; id: string }[]>([]);
   const [selectedItem, setSelectedItem] = useState<{ name: string; quantity: number; price: number } | null>(null);
@@ -116,7 +117,6 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, barId }) =
   const handleCashPayment = async () => {
     try {
       for (const item of itemList) {
-        const deviceId = "bdce2139-e3b6-4e94-ae97-c89d6a71d178"; 
         const productId = item.id; 
         const amount = item.quantity;
         const pricePerProduct = item.price;
