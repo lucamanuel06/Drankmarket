@@ -1,11 +1,13 @@
 "use client"
 import React from "react";
+
+import ManageCategories from "./categories"
+import ManageDrinks from "./drinks"
+
 import { useServiceContext } from "@/app/providers";
 import { Drink } from "@/models/drink";
 import { Category } from "@/models/category";
 import { getDrinksByCategory } from "@/generic/utils/drinks-mapper";
-import ManageCategories from "./categories"
-import ManageDrinks from "./drinks"
 
 export default function Page() {
   let context = useServiceContext()
@@ -21,10 +23,12 @@ export default function Page() {
   const [drinks, setDrinks] = React.useState([] as Array<Drink>)
   const [drinksFailed, setDrinksFailed] = React.useState(false)
 
+
   React.useEffect(() => {
     async function fetchCategories(barId: string) {
       if (categoryService.categories !== null) {
         setCategories(categoryService.categories)
+
         return
       }
 
@@ -37,6 +41,7 @@ export default function Page() {
 
     async function fetchDrinks(barId: string) {
       let foundDrinks: Array<Drink> = []
+
       if (drinkService.drinks !== null) {
         foundDrinks = drinkService.drinks
       } else {
@@ -48,6 +53,7 @@ export default function Page() {
       }
 
       let selectedDrinks = getDrinksByCategory(foundDrinks, selectedCategory)
+
       setDrinks(selectedDrinks)
     }
 
