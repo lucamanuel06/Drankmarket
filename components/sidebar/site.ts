@@ -37,6 +37,10 @@ export const siteConfig = {
       href: Constants.ManageProducts,
     },
     {
+      label: "Kassa's",
+      href: Constants.ManageDevices,
+    },
+    {
       label: "Data",
       href: Constants.ManageData,
     },

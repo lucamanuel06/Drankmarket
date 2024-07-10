@@ -17,6 +17,12 @@ export default function Page() {
         </Button>
         <Button
           className="py-16 px-40"
+          onPress={() => router.push(Constants.ManageDevices)}
+        >
+          Beheer de kassa's
+        </Button>
+        <Button
+          className="py-16 px-40"
           onPress={() => router.push(Constants.ManageData)}
         >
           Bekijk de data
