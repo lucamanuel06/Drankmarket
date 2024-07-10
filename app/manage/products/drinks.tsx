@@ -230,7 +230,6 @@ type DrinkRowProps = {
 
 function DrinkRow(props: DrinkRowProps) {
   const { drink, isSelected, onClick } = props
-  console.log(drink)
   let backgroundColor = isSelected ? "bg-cyan-800" : ""
 
   return (
