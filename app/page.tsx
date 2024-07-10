@@ -1,26 +1,58 @@
 "use client";
 import React from "react";
 import { Button } from "@nextui-org/react";
-import { siteConfig } from "./cards";
 import { useServiceContext } from "./providers";
 import { Constants } from "@/generic/constants";
 import { LoginService } from "@/services/login-service";
 import { LoginType } from "@/models/login";
+import { Device } from "@/models/device"
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  let loginService = useServiceContext().loginService
+  const router = useRouter()
+  let context = useServiceContext()
+  let loginService = context.loginService
+  let deviceService = context.deviceService
   let storedBarId = localStorage.getItem(Constants.BarId)
   const [isLoggedIn, setLoggedIn] = React.useState(storedBarId !== null)
 
+  const [devices, setDevices] = React.useState([] as Device[])
+  const [loaded, setLoaded] = React.useState(false)
+  const [loadingFailed, setLoadingFailed] = React.useState(false)
+
+  React.useEffect(() => {
+    async function getDevices(bar: string) {
+      if (deviceService.devices !== null) {
+        setDevices(deviceService.devices)
+        setLoaded(true)
+      } else {
+        try {
+          let result = await deviceService.getDevices(bar)
+          setDevices(result)
+          setLoaded(true)
+        } catch {
+          setLoadingFailed(true)
+        }
+      }
+    }
+
+    if (!loaded && storedBarId !== null) {
+      getDevices(storedBarId)
+    }
+  })
+
   return (
     <main className="flex gap-3 p-9 min-h-screen">
-      {isLoggedIn && siteConfig.cardItems.map((item) => (
+      { isLoggedIn && loadingFailed &&
+        <p className="p-2 text-red-600">Kassa's ophalen is mislukt</p>
+      }
+      { isLoggedIn && devices.map((item) => (
         <Button
-          key={item.href}
+          key={item.id}
           className="py-16 px-40 flex flex-col items-start"
-          onClick={() => (window.location.href = item.href)}
+          onClick={() => router.push(`/device/${item.id}`)}
         >
-          {item.label}
+          {item.name}
         </Button>
       ))}
       {!isLoggedIn &&

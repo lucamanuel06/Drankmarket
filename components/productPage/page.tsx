@@ -16,6 +16,7 @@ import { OrderService } from "@/services/order-service";
 type ManageDrinksProps = {
   drinks: Array<Drink>;
   categories: Array<Category>;
+  deviceId: string;
   barId: string;
 };
 
@@ -25,7 +26,7 @@ const categoryColors: { [key: string]: string } = {
   "Wijn": "bg-blue-700",
 };
 
-const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, barId }) => {
+const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId, barId }) => {
   const [number, setNumber] = useState("");
   const [itemList, setItemList] = useState<{ name: string; quantity: number; price: number; id: string }[]>([]);
   const [selectedItem, setSelectedItem] = useState<{ name: string; quantity: number; price: number } | null>(null);
@@ -116,7 +117,6 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, barId }) =
   const handleCashPayment = async () => {
     try {
       for (const item of itemList) {
-        const deviceId = "bdce2139-e3b6-4e94-ae97-c89d6a71d178"; 
         const productId = item.id; 
         const amount = item.quantity;
         const pricePerProduct = item.price;
@@ -235,7 +235,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, barId }) =
             const filteredDrinks = drinks.filter((drink) => drink.categoryId === category.id);
 
             return (
-              <div key={category.id} className={`flex flex-col  ${categoryColors[category.name] || 'bg-gray-200'} p-4`}>
+              <div key={category.id} className={`flex flex-col rounded-md ${categoryColors[category.name] || 'bg-gray-200'} p-4`}>
                 <h2 className="text-center text-white">{category.name}</h2>
                 <div className="flex flex-col gap-2">
                   {filteredDrinks.map((item) => (
@@ -300,7 +300,7 @@ type DrinkRowProps = {
 
 const DrinkRow: React.FC<DrinkRowProps> = ({ drink, onClick }) => {
   return (
-    <button className="p-2 bg-white text-black mt-1" onClick={onClick}>
+    <button className="p-2 bg-[#182129] text-white mt-1 rounded" onClick={onClick}>
       <div>{drink.name}</div>
     </button>
   );

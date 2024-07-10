@@ -3,6 +3,8 @@ import { Device, mapResponseToDevice } from "@/models/device"
 
 export class DeviceService extends ApiService {
 
+  public devices: Device[] | null = null
+
   constructor() {
     super("/device")
   }
@@ -13,7 +15,9 @@ export class DeviceService extends ApiService {
         value: barId,
     })
     let devices: Array<any> = await response.json()
-    return devices.map(mapResponseToDevice)
+    let mapped = devices.map(mapResponseToDevice)
+    this.devices = mapped
+    return mapped
   }
 
   async createDevice(barId: string, name: string): Promise<Device> {
@@ -22,7 +26,11 @@ export class DeviceService extends ApiService {
       "name": name,
     })
     let device = await response.json()
-    return mapResponseToDevice(device)
+    let mapped = mapResponseToDevice(device)
+    if (this.devices !== null) {
+      this.devices = [mapped, ...this.devices]
+    }
+    return mapped
   }
 
   async updateDevice(deviceId: string, name: string): Promise<Device> {
@@ -31,10 +39,21 @@ export class DeviceService extends ApiService {
       "name": name,
     })
     let updated = await response.json()
-    return mapResponseToDevice(updated)
+    let mapped = mapResponseToDevice(updated)
+    if (this.devices !== null) {
+      this.devices = this.devices.map((item) => {
+        return item.id === deviceId ? mapped : item
+      })
+    }
+    return mapped
   }
   
   async deleteDevice(id: string) {
     await this.doRequest("DELETE", { "id": id })
+    if (this.devices !== null) {
+      this.devices = this.devices.filter((item) => {
+        return item.id !== id
+      })
+    }
   }
 }
