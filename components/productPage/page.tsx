@@ -116,7 +116,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, barId }) =
   const handleCashPayment = async () => {
     try {
       for (const item of itemList) {
-        const deviceId = "4fff9b6a-26d6-46e2-8419-49805c779368"; 
+        const deviceId = "bdce2139-e3b6-4e94-ae97-c89d6a71d178"; 
         const productId = item.id; 
         const amount = item.quantity;
         const pricePerProduct = item.price;
