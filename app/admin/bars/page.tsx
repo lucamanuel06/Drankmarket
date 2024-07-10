@@ -1,5 +1,6 @@
 "use client"
 import React from "react"
+
 import { useServiceContext } from "@/app/providers"
 import { Bar } from "@/models/bar"
 
@@ -7,6 +8,7 @@ export default function Page() {
   const context = useServiceContext()
   const loginService = context.loginService
   const [isAdmin, setAdmin] = React.useState(false)
+
   React.useEffect(() => {
     async function checkAdmin() {
       if (await loginService.isAdmin()) setAdmin(true)
@@ -30,6 +32,7 @@ export default function Page() {
     async function retrieveBars() {
       try {
         let retrievedBars = await barService.getBars()
+
         setBars(retrievedBars)
       } catch {
         setLoadingFailed(true)
@@ -43,8 +46,10 @@ export default function Page() {
 
   function selectBar(id: string) {
     let isDeselect = selectedId === id
+
     setSelectedId(isDeselect ? "" : id)
     let selectedBar = bars.find((item) => item.id === id)
+
     if (selectedBar == null) {
       setNewName("")
       setNewPassword("")
@@ -63,6 +68,7 @@ export default function Page() {
 
   async function updateBar() {
     let selectedBar = bars.find((item) => item.id === selectedId)
+
     if (selectedBar != null) {
       await barService.updateBar({
         id: selectedBar.id,

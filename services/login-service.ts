@@ -4,6 +4,9 @@ import { ApiService} from "./api-service"
 import { LoginType, User, mapResponseToUser } from "@/models/login"
 
 export class LoginService extends ApiService {
+  static getBarId() {
+    throw new Error("Method not implemented.")
+  }
 
   public user: User | null = null
 

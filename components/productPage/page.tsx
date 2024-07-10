@@ -9,21 +9,26 @@ import {
 } from "@nextui-org/react";
 import React, { useState } from "react";
 
-const categories = [
-  { name: "Bieren", color: "bg-yellow-500", items: ["Bokbier", "Fluitje bier", "Leffe blond", "Leffe dubbel", "Palm", "Pitcher bier", "Pul bier"] },
-  {
-    name: "Frisdranken",
-    color: "bg-red-500",
-    items: ["Cola", "Cola light", "Sisi", "7-Up", "Bitter lemon", "Cassis", "Cristal clear lemon"],
-  },
-  { name: "Wijnen", color: "bg-blue-700", items: ["Item4", "Item5", "Item6"] },
-  { name: "Mixdranken", color: "bg-teal-500", items: ["Item19", "Item20", "Item21"] },
-];
+import { Drink } from "@/models/drink";
+import { Category } from "@/models/category";
+import { OrderService } from "@/services/order-service"; 
 
-const POSLayout: React.FC = () => {
+type ManageDrinksProps = {
+  drinks: Array<Drink>;
+  categories: Array<Category>;
+  barId: string;
+};
+
+const categoryColors: { [key: string]: string } = {
+  "Frisdranken": "bg-blue-500",
+  "Bier": "bg-yellow-500",
+  "Wijn": "bg-blue-700",
+};
+
+const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, barId }) => {
   const [number, setNumber] = useState("");
-  const [itemList, setItemList] = useState<{ name: string; quantity: number }[]>([]);
-  const [selectedItem, setSelectedItem] = useState<{ name: string; quantity: number } | null>(null);
+  const [itemList, setItemList] = useState<{ name: string; quantity: number; price: number; id: string }[]>([]);
+  const [selectedItem, setSelectedItem] = useState<{ name: string; quantity: number; price: number } | null>(null);
   const [modalQuantity, setModalQuantity] = useState<string>("");
 
   const handleButtonClick = (value: string) => {
@@ -42,7 +47,7 @@ const POSLayout: React.FC = () => {
     }
   };
 
-  const handleProductClick = (productName: string) => {
+  const handleProductClick = (productName: string, productPrice: number, productId: string) => {
     const quantity = number ? parseInt(number, 10) : 1;
 
     setItemList((prevItemList) => {
@@ -53,7 +58,7 @@ const POSLayout: React.FC = () => {
           item.name === productName ? { ...item, quantity: item.quantity + quantity } : item
         );
       } else {
-        return [...prevItemList, { name: productName, quantity }];
+        return [...prevItemList, { name: productName, quantity, price: productPrice, id: productId }];
       }
     });
     setNumber("");
@@ -77,7 +82,13 @@ const POSLayout: React.FC = () => {
     );
   };
 
-  const openModal = (item: { name: string; quantity: number }) => {
+  const removeItem = (productName: string) => {
+    setItemList((prevItemList) =>
+      prevItemList.filter((item) => item.name !== productName)
+    );
+  };
+
+  const openModal = (item: { name: string; quantity: number; price: number }) => {
     setSelectedItem(item);
     setModalQuantity(item.quantity.toString());
     onOpen();
@@ -100,8 +111,29 @@ const POSLayout: React.FC = () => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const orderService = new OrderService(); 
+
+  const handleCashPayment = async () => {
+    try {
+      for (const item of itemList) {
+        const deviceId = "4fff9b6a-26d6-46e2-8419-49805c779368"; 
+        const productId = item.id; 
+        const amount = item.quantity;
+        const pricePerProduct = item.price;
+
+
+
+        await orderService.createOrder(deviceId, productId, amount, pricePerProduct);
+      }
+
+      setItemList([]);
+    } catch (error) {
+      console.error("Error creating order:", error);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 p-4">
+    <div className="min-h-screen flex flex-col bg-[#182129] p-4">
       <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
         {/* Left Panel */}
         <div
@@ -123,10 +155,10 @@ const POSLayout: React.FC = () => {
                             <p>{item.quantity + `x`}</p>
                           </div>
                           <div>
-                            <p>€</p>
+                            <p>€{item.price.toFixed(2)}</p>
                           </div>
                           <div>
-                            <p>€</p>
+                            <p>€{(item.price * item.quantity).toFixed(2)}</p>
                           </div>
                         </button>
                       </PopoverTrigger>
@@ -149,7 +181,7 @@ const POSLayout: React.FC = () => {
                             <p>Wijzig</p>
                           </div>
                         </button>
-                        <button className="bg-red-500 block p-1">
+                        <button onClick={() => { removeItem(item.name) }} className="bg-red-500 block p-1">
                           🗑️
                           <div>
                             <p>verwijder</p>
@@ -184,7 +216,7 @@ const POSLayout: React.FC = () => {
                     if (num === "Pin") {
                       // Pin functionality
                     } else if (num === "Contant") {
-                      // Contant functionality
+                      handleCashPayment(); 
                     } else {
                       handleButtonClick(num);
                     }
@@ -198,28 +230,25 @@ const POSLayout: React.FC = () => {
         </div>
 
         {/* Right Panel */}
-        <div className="w-full">
-          <div className="bg-white p-4 shadow-md grid grid-cols-1 md:grid-cols-4 gap-4">
-            {categories.map((category) => (
-              <div key={category.name} className="flex flex-col">
-                <div className={`p-4 text-center text-white ${category.color}`}>
-                  {category.name}
-                </div>
-                <div className="flex flex-col bg-gray-200 p-2">
-                  {category.items.map((item) => (
-                    <Button
-                      key={item}
-                      radius="none"
-                      className="p-2 bg-white text-black mt-1"
-                      onClick={() => handleProductClick(item)}
-                    >
-                      {item}
-                    </Button>
+        <div className="w-full grid grid-cols-1 md:grid-cols-4 gap-4">
+          {categories.map((category) => {
+            const filteredDrinks = drinks.filter((drink) => drink.categoryId === category.id);
+
+            return (
+              <div key={category.id} className={`flex flex-col  ${categoryColors[category.name] || 'bg-gray-200'} p-4`}>
+                <h2 className="text-center text-white">{category.name}</h2>
+                <div className="flex flex-col gap-2">
+                  {filteredDrinks.map((item) => (
+                    <DrinkRow
+                      drink={item}
+                      key={item.id}
+                      onClick={() => handleProductClick(item.name, item.currentPrice, item.id)} // Pass the product id
+                    />
                   ))}
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
       {selectedItem && (
@@ -263,3 +292,16 @@ const POSLayout: React.FC = () => {
 };
 
 export default POSLayout;
+
+type DrinkRowProps = {
+  drink: Drink;
+  onClick: () => void;
+};
+
+const DrinkRow: React.FC<DrinkRowProps> = ({ drink, onClick }) => {
+  return (
+    <button className="p-2 bg-white text-black mt-1" onClick={onClick}>
+      <div>{drink.name}</div>
+    </button>
+  );
+};

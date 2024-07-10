@@ -1,5 +1,6 @@
 "use client"
 import React from "react";
+
 import { useServiceContext } from "@/app/providers";
 import { Drink } from "@/models/drink";
 
@@ -29,8 +30,10 @@ export default function ManageDrinks({ drinks, categoryId, updateDrinks, loadFai
 
   function selectDrink(id: string) {
     let isDeselect = id === selectedId
+
     setSelectedId(isDeselect ? "" : id)
     let selectedDrink = drinks.find((item) => item.id === id)
+
     if (selectedDrink != null && !isDeselect) {
       setNewName(selectedDrink.name)
       setNewTag(selectedDrink.tag)
@@ -226,6 +229,7 @@ type DrinkRowProps = {
 
 function DrinkRow(props: DrinkRowProps) {
   const { drink, isSelected, onClick } = props
+  console.log(drink)
   let backgroundColor = isSelected ? "bg-cyan-800" : ""
 
   return (
