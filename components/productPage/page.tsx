@@ -235,7 +235,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId, 
             const filteredDrinks = drinks.filter((drink) => drink.categoryId === category.id);
 
             return (
-              <div key={category.id} className={`flex flex-col  ${categoryColors[category.name] || 'bg-gray-200'} p-4`}>
+              <div key={category.id} className={`flex flex-col rounded-md ${categoryColors[category.name] || 'bg-gray-200'} p-4`}>
                 <h2 className="text-center text-white">{category.name}</h2>
                 <div className="flex flex-col gap-2">
                   {filteredDrinks.map((item) => (
@@ -300,7 +300,7 @@ type DrinkRowProps = {
 
 const DrinkRow: React.FC<DrinkRowProps> = ({ drink, onClick }) => {
   return (
-    <button className="p-2 bg-white text-black mt-1" onClick={onClick}>
+    <button className="p-2 bg-[#182129] text-white mt-1 rounded" onClick={onClick}>
       <div>{drink.name}</div>
     </button>
   );
