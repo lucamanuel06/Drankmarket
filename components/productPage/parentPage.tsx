@@ -59,7 +59,7 @@ const ParentComponent = ({ deviceId }: ProductPageProps) => {
     }
   }, [barId, categoryService, drinkService]);
 
-  return <POSLayout drinks={drinks} categories={categories} deviceId={deviceId} barId={barId} />;
+  return <POSLayout drinks={drinks} categories={categories} deviceId={deviceId} />;
 };
 
 export default ParentComponent;

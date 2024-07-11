@@ -2,7 +2,6 @@
 import React from "react";
 import { Button } from "@nextui-org/react";
 import { useServiceContext } from "./providers";
-import { Constants } from "@/generic/constants";
 import { LoginService } from "@/services/login-service";
 import { LoginType } from "@/models/login";
 import { Device } from "@/models/device"
@@ -13,7 +12,7 @@ export default function Home() {
   let context = useServiceContext()
   let loginService = context.loginService
   let deviceService = context.deviceService
-  let storedBarId = localStorage.getItem(Constants.BarId)
+  let storedBarId = loginService.getBarId()
   const [isLoggedIn, setLoggedIn] = React.useState(storedBarId !== null)
 
   const [devices, setDevices] = React.useState([] as Device[])
@@ -44,7 +43,7 @@ export default function Home() {
   return (
     <main className="flex gap-3 p-9 min-h-screen">
       { isLoggedIn && loadingFailed &&
-        <p className="p-2 text-red-600">Kassa's ophalen is mislukt</p>
+        <p className="p-2 text-red-600">Terminals ophalen is mislukt</p>
       }
       { isLoggedIn && devices.map((item) => (
         <Button

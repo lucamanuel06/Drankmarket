@@ -25,11 +25,9 @@ export default function ManageCategories({
   const [updateColor, setColorToUpdate] = React.useState("#000000")
 
   async function newCategory() {
-    if (barId !== null) {
-      await categoryService.createCategory(newName, newColor, barId)
-      if (categoryService.categories !== null) {
-        setCategories(categoryService.categories)
-      }
+    await categoryService.createCategory(newName, newColor, barId)
+    if (categoryService.categories !== null) {
+      setCategories(categoryService.categories)
     }
   }
 
@@ -162,7 +160,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ isSelected, name, onClick }
   let backgroundColor = isSelected ? " bg-cyan-800" : ""
 
   return (
-    <div className={"p-2" + backgroundColor} onClick={onClick}>
+    <div className={"p-2" + backgroundColor} onClick={onClick} role="button">
       {name}
     </div>
   )

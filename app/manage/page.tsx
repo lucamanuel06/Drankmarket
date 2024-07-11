@@ -19,7 +19,7 @@ export default function Page() {
           className="py-16 px-40"
           onPress={() => router.push(Constants.ManageDevices)}
         >
-          Beheer de kassa's
+          Beheer terminals
         </Button>
         <Button
           className="py-16 px-40"

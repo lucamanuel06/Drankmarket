@@ -65,21 +65,25 @@ export default function Page() {
 
   return (
     <main className="min-h-screen container mx-auto flex space-x-4">
-      <ManageCategories
-        categories={categories}
-        setCategories={setCategories}
-        selectedId={selectedCategory}
-        setSelectedId={setSelectedCategory}
-        loadingFailed={categoriesFailed}
-        barId={barId}
-      />
-      <ManageDrinks 
-        drinks={drinks} 
-        loadFailed={drinksFailed} 
-        categoryId={selectedCategory} 
-        updateDrinks={(updated) => setDrinks(getDrinksByCategory(updated, selectedCategory))}
-        barId={barId}
-      />
+      { barId !== null &&
+        <>
+          <ManageCategories
+            categories={categories}
+            setCategories={setCategories}
+            selectedId={selectedCategory}
+            setSelectedId={setSelectedCategory}
+            loadingFailed={categoriesFailed}
+            barId={barId}
+          />
+          <ManageDrinks 
+            drinks={drinks} 
+            loadFailed={drinksFailed} 
+            categoryId={selectedCategory} 
+            updateDrinks={(updated) => setDrinks(getDrinksByCategory(updated, selectedCategory))}
+            barId={barId}
+          />
+        </>
+      }
     </main>
   );
 }

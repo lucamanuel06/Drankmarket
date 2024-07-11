@@ -188,7 +188,7 @@ function BarItem({ name, isSelected, onClick }: BarItemProps) {
   let backgroundColor = isSelected ? " bg-cyan-800" : ""
 
   return (
-    <div className={"p-2" + backgroundColor} onClick={onClick}>
+    <div className={"p-2" + backgroundColor} onClick={onClick} role="button">
       {name}
     </div>
   )

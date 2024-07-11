@@ -114,7 +114,7 @@ export default function Page() {
       </div>
       <div className="flex flex-col bg-stone-800 overflow-y-auto w-1/4">
         { loadFailed &&
-          <p className="p-2 text-red-600">Kassa's ophalen is mislukt</p>
+          <p className="p-2 text-red-600">Terminals ophalen is mislukt</p>
         }
         { devices.map((item) => (
           <DeviceRow
@@ -139,6 +139,6 @@ function DeviceRow({ name, isSelected, onClick }: DeviceRowProps) {
   let backgroundColor = isSelected ? "bg-cyan-800" : ""
 
   return (
-    <div className={"p-2 " + backgroundColor} onClick={onClick}>{name}</div>
+    <div className={"p-2 " + backgroundColor} onClick={onClick} role="button">{name}</div>
   )
 }

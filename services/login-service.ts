@@ -4,11 +4,10 @@ import { ApiService} from "./api-service"
 import { LoginType, User, mapResponseToUser } from "@/models/login"
 
 export class LoginService extends ApiService {
-  static getBarId() {
-    throw new Error("Method not implemented.")
-  }
 
   public user: User | null = null
+
+  public localStorage: Storage | null = null
 
   constructor() {
     super("/bar/login")
@@ -24,13 +23,13 @@ export class LoginService extends ApiService {
     let body = await response.json()
     this.user = mapResponseToUser(body)
 
-    localStorage.setItem(Constants.BarId, this.user.barId)
+    this.localStorage?.setItem(Constants.BarId, this.user.barId)
     
     return LoginType.LoggedIn
   }
 
   logout() {
-    localStorage.removeItem(Constants.BarId)
+    this.localStorage?.removeItem(Constants.BarId)
     this.user = null
   }
 
@@ -38,7 +37,7 @@ export class LoginService extends ApiService {
     if (this.user !== null) {
       return this.user.barId
     }
-    return localStorage.getItem(Constants.BarId)
+    return this.localStorage === null ? null : this.localStorage.getItem(Constants.BarId)
   }
 
   async isAdmin(): Promise<boolean> {
@@ -50,5 +49,9 @@ export class LoginService extends ApiService {
     let response = await fetch(`${apiConfig["api_base_url"]}/bar?id=${storedBarId}`)
     let responseBody = await response.json()
     return responseBody["super_admin"] === 1
+  }
+
+  setLocalStorage(localStorage: Storage) {
+    this.localStorage = localStorage
   }
 }

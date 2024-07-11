@@ -29,7 +29,7 @@ export const siteConfig = {
       href: Constants.ManageProducts,
     },
     {
-      label: "Kassa's",
+      label: "Terminals",
       href: Constants.ManageDevices,
     },
     {

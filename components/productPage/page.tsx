@@ -17,7 +17,6 @@ type ManageDrinksProps = {
   drinks: Array<Drink>;
   categories: Array<Category>;
   deviceId: string;
-  barId: string;
 };
 
 const categoryColors: { [key: string]: string } = {
@@ -26,7 +25,7 @@ const categoryColors: { [key: string]: string } = {
   "Wijn": "bg-blue-700",
 };
 
-const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId, barId }) => {
+const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }) => {
   const [number, setNumber] = useState("");
   const [itemList, setItemList] = useState<{ name: string; quantity: number; price: number; id: string }[]>([]);
   const [selectedItem, setSelectedItem] = useState<{ name: string; quantity: number; price: number } | null>(null);
