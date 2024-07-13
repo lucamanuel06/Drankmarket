@@ -1,17 +1,23 @@
 "use client";
-import { Button, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@nextui-org/react";
+import {
+  Button,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  useDisclosure,
+} from "@nextui-org/react";
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter
+  ModalFooter,
 } from "@nextui-org/react";
 import React, { useState } from "react";
 
 import { Drink } from "@/models/drink";
 import { Category } from "@/models/category";
-import { OrderService } from "@/services/order-service"; 
+import { OrderService } from "@/services/order-service";
 
 type ManageDrinksProps = {
   drinks: Array<Drink>;
@@ -20,15 +26,25 @@ type ManageDrinksProps = {
 };
 
 const categoryColors: { [key: string]: string } = {
-  "Frisdranken": "bg-blue-500",
-  "Bier": "bg-yellow-500",
-  "Wijn": "bg-blue-700",
+  Frisdranken: "bg-blue-500",
+  Bier: "bg-yellow-500",
+  Wijn: "bg-blue-700",
 };
 
-const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }) => {
+const POSLayout: React.FC<ManageDrinksProps> = ({
+  drinks,
+  categories,
+  deviceId,
+}) => {
   const [number, setNumber] = useState("");
-  const [itemList, setItemList] = useState<{ name: string; quantity: number; price: number; id: string }[]>([]);
-  const [selectedItem, setSelectedItem] = useState<{ name: string; quantity: number; price: number } | null>(null);
+  const [itemList, setItemList] = useState<
+    { name: string; quantity: number; price: number; id: string }[]
+  >([]);
+  const [selectedItem, setSelectedItem] = useState<{
+    name: string;
+    quantity: number;
+    price: number;
+  } | null>(null);
   const [modalQuantity, setModalQuantity] = useState<string>("");
 
   const handleButtonClick = (value: string) => {
@@ -47,18 +63,29 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
     }
   };
 
-  const handleProductClick = (productName: string, productPrice: number, productId: string) => {
+  const handleProductClick = (
+    productName: string,
+    productPrice: number,
+    productId: string
+  ) => {
     const quantity = number ? parseInt(number, 10) : 1;
 
     setItemList((prevItemList) => {
-      const existingItem = prevItemList.find((item) => item.name === productName);
+      const existingItem = prevItemList.find(
+        (item) => item.name === productName
+      );
 
       if (existingItem) {
         return prevItemList.map((item) =>
-          item.name === productName ? { ...item, quantity: item.quantity + quantity } : item
+          item.name === productName
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
         );
       } else {
-        return [...prevItemList, { name: productName, quantity, price: productPrice, id: productId }];
+        return [
+          ...prevItemList,
+          { name: productName, quantity, price: productPrice, id: productId },
+        ];
       }
     });
     setNumber("");
@@ -67,7 +94,9 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
   const increaseQuantity = (productName: string) => {
     setItemList((prevItemList) =>
       prevItemList.map((item) =>
-        item.name === productName ? { ...item, quantity: item.quantity + 1 } : item
+        item.name === productName
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
       )
     );
   };
@@ -88,7 +117,11 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
     );
   };
 
-  const openModal = (item: { name: string; quantity: number; price: number }) => {
+  const openModal = (item: {
+    name: string;
+    quantity: number;
+    price: number;
+  }) => {
     setSelectedItem(item);
     setModalQuantity(item.quantity.toString());
     onOpen();
@@ -109,20 +142,33 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
     onOpenChange();
   };
 
+  const calculateTotalPrice = (): number => {
+    let totalPrice = 0;
+
+    for (const item of itemList) {
+      totalPrice += item.price * item.quantity;
+    }
+
+    return totalPrice;
+  };
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const orderService = new OrderService(); 
+  const orderService = new OrderService();
 
   const handleCashPayment = async () => {
     try {
       for (const item of itemList) {
-        const productId = item.id; 
+        const productId = item.id;
         const amount = item.quantity;
         const pricePerProduct = item.price;
 
-
-
-        await orderService.createOrder(deviceId, productId, amount, pricePerProduct);
+        await orderService.createOrder(
+          deviceId,
+          productId,
+          amount,
+          pricePerProduct
+        );
       }
 
       setItemList([]);
@@ -139,12 +185,16 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
           className="flex p-4 bg-gray-800 flex-col space-y-4 flex-shrink-0"
           style={{ height: "calc(100vh - 100px)" }}
         >
-          <div className="bg-white flex justify-between flex-col text-black p-4 shadow-md flex-1">
-            <div className="flex items-center mb-4">
-              <ul className="w-full">
+          <div className="bg-white flex justify-between flex-col text-black p-4 shadow-md flex-1 ">
+            <div className="flex items-center mb-4 over">
+            <ul className="w-full grow h-80 overflow-y-auto">
                 {itemList.map((item, index) => (
                   <li key={index}>
-                    <Popover placement="bottom" radius="none" className="bg-gray-500">
+                    <Popover
+                      placement="bottom"
+                      radius="none"
+                      className="bg-gray-500"
+                    >
                       <PopoverTrigger>
                         <button className="grid grid-cols-4 w-full border-b-3 p-4">
                           <div>
@@ -163,10 +213,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
                       </PopoverTrigger>
                       <PopoverContent className="flex flex-row gap-2 p-0 justify-between w-56">
                         <button onClick={() => increaseQuantity(item.name)}>
-                          +
-                          <div className="p-1">
-                            Meer
-                          </div>
+                          +<div className="p-1">Meer</div>
                         </button>
                         <button onClick={() => decreaseQuantity(item.name)}>
                           -
@@ -174,13 +221,21 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
                             <p>Minder</p>
                           </div>
                         </button>
-                        <button onClick={() => openModal(item)} className="block">
+                        <button
+                          onClick={() => openModal(item)}
+                          className="block"
+                        >
                           ±
                           <div>
                             <p>Wijzig</p>
                           </div>
                         </button>
-                        <button onClick={() => { removeItem(item.name) }} className="bg-red-500 block p-1">
+                        <button
+                          onClick={() => {
+                            removeItem(item.name);
+                          }}
+                          className="bg-red-500 block p-1"
+                        >
                           🗑️
                           <div>
                             <p>verwijder</p>
@@ -192,22 +247,44 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
                 ))}
               </ul>
             </div>
-            <div className="border-3 flex flex-row justify-between items-center p-4">
-              <div className="relative flex justify-center items-center w-full">
-                <p className="flex-grow">{number}</p>
-                <button
-                  className="p-2 text-black rounded absolute block top-50 left-50"
-                  onClick={() => handleButtonClick("Backspace")}
-                >
-                  ⌫
-                </button>
+
+              <div
+                className="border-3 flex flex-row justify-between items-center p-4"
+              >
+                <div className="relative flex justify-center items-center w-full">
+                  <p className="flex-grow">{number}</p>
+                  <button
+                    className="p-2 text-black rounded absolute block top-50 left-50"
+                    onClick={() => handleButtonClick("Backspace")}
+                  >
+                    ⌫
+                  </button>
+                </div>
+                <div>€{calculateTotalPrice().toFixed(2)}</div>
+                
               </div>
-              <div>price</div>
-            </div>
+
           </div>
           <div className="bg-gray-800 shadow-md flex justify-center">
             <div className="grid grid-cols-4 gap-2 md:gap-4 p-4">
-              {["7", "8", "9", "+", "4", "5", "6", "-", "1", "2", "3", "Pin", "0", "00", ",", "Contant"].map((num) => (
+              {[
+                "7",
+                "8",
+                "9",
+                "+",
+                "4",
+                "5",
+                "6",
+                "-",
+                "1",
+                "2",
+                "3",
+                "Pin",
+                "0",
+                "00",
+                ",",
+                "Contant",
+              ].map((num) => (
                 <Button
                   key={num}
                   className="p-2 md:p-4 bg-gray-700 text-white rounded w-full"
@@ -215,7 +292,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
                     if (num === "Pin") {
                       // Pin functionality
                     } else if (num === "Contant") {
-                      handleCashPayment(); 
+                      handleCashPayment();
                     } else {
                       handleButtonClick(num);
                     }
@@ -231,17 +308,28 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
         {/* Right Panel */}
         <div className="w-full grid grid-cols-1 md:grid-cols-4 gap-4">
           {categories.map((category) => {
-            const filteredDrinks = drinks.filter((drink) => drink.categoryId === category.id);
+            const filteredDrinks = drinks.filter(
+              (drink) => drink.categoryId === category.id
+            );
 
             return (
-              <div key={category.id} className={`flex flex-col rounded-md ${categoryColors[category.name] || 'bg-gray-200'} p-4`}>
+              <div
+                key={category.id}
+                className={`flex flex-col rounded-md ${categoryColors[category.name] || "bg-gray-200"} p-4`}
+              >
                 <h2 className="text-center text-white">{category.name}</h2>
                 <div className="flex flex-col gap-2">
                   {filteredDrinks.map((item) => (
                     <DrinkRow
                       drink={item}
                       key={item.id}
-                      onClick={() => handleProductClick(item.name, item.currentPrice, item.id)} // Pass the product id
+                      onClick={() =>
+                        handleProductClick(
+                          item.name,
+                          item.currentPrice,
+                          item.id
+                        )
+                      } // Pass the product id
                     />
                   ))}
                 </div>
@@ -251,17 +339,40 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
         </div>
       </div>
       {selectedItem && (
-        <Modal backdrop="opaque" isDismissable radius="none" isOpen={isOpen} onOpenChange={onOpenChange}>
+        <Modal
+          backdrop="opaque"
+          isDismissable
+          radius="none"
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+        >
           <ModalContent>
             {(onClose) => (
               <>
                 <ModalHeader>Wijzig aantal</ModalHeader>
                 <ModalBody>
                   <div className="flex flex-col gap-4">
-                    <div className="text-center text-lg mb-4">{selectedItem.name}</div>
-                    <div className="text-center text-lg mb-4">{modalQuantity}</div>
+                    <div className="text-center text-lg mb-4">
+                      {selectedItem.name}
+                    </div>
+                    <div className="text-center text-lg mb-4">
+                      {modalQuantity}
+                    </div>
                     <div className="grid grid-cols-4 gap-2 md:gap-4 p-4">
-                      {["7", "8", "9", "0", "4", "5", "6", "00", "1", "2", "3", "Backspace"].map((num) => (
+                      {[
+                        "7",
+                        "8",
+                        "9",
+                        "0",
+                        "4",
+                        "5",
+                        "6",
+                        "00",
+                        "1",
+                        "2",
+                        "3",
+                        "Backspace",
+                      ].map((num) => (
                         <Button
                           key={num}
                           className="p-2 md:p-4 bg-gray-700 text-white rounded w-full"
@@ -274,10 +385,18 @@ const POSLayout: React.FC<ManageDrinksProps> = ({ drinks, categories, deviceId }
                   </div>
                 </ModalBody>
                 <ModalFooter>
-                  <Button className="text-blue-500" variant="light" onPress={onClose}>
+                  <Button
+                    className="text-blue-500"
+                    variant="light"
+                    onPress={onClose}
+                  >
                     Annuleren
                   </Button>
-                  <Button className="text-blue-500" variant="light" onPress={handleModalSave}>
+                  <Button
+                    className="text-blue-500"
+                    variant="light"
+                    onPress={handleModalSave}
+                  >
                     Opslaan
                   </Button>
                 </ModalFooter>
@@ -299,7 +418,10 @@ type DrinkRowProps = {
 
 const DrinkRow: React.FC<DrinkRowProps> = ({ drink, onClick }) => {
   return (
-    <button className="p-2 bg-[#182129] text-white mt-1 rounded" onClick={onClick}>
+    <button
+      className="p-2 bg-[#182129] text-white mt-1 rounded"
+      onClick={onClick}
+    >
       <div>{drink.name}</div>
     </button>
   );
