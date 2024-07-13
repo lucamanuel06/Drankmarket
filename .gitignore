@@ -36,3 +36,8 @@ next-env.d.ts
 
 #Apple generated files
 **/._*
+
+
+#serwist
+/public/sw.js
+/public/swe-worker-*

@@ -1,6 +1,7 @@
+import { ApiService} from "./api-service"
+
 import apiConfig from "@/api-config.json"
 import { Constants } from "@/generic/constants"
-import { ApiService} from "./api-service"
 import { LoginType, User, mapResponseToUser } from "@/models/login"
 
 export class LoginService extends ApiService {
@@ -18,9 +19,11 @@ export class LoginService extends ApiService {
       "name": name,
       "password": password,
     })
+
     if (!response.ok) return LoginType.Rejected
 
     let body = await response.json()
+
     this.user = mapResponseToUser(body)
 
     this.localStorage?.setItem(Constants.BarId, this.user.barId)
@@ -37,17 +40,20 @@ export class LoginService extends ApiService {
     if (this.user !== null) {
       return this.user.barId
     }
-    return this.localStorage === null ? null : this.localStorage.getItem(Constants.BarId)
+
+    return localStorage.getItem(Constants.BarId)
   }
 
   async isAdmin(): Promise<boolean> {
     if (this.user !== null) return this.user.isAdmin
     
     let storedBarId = localStorage.getItem(Constants.BarId)
+
     if (storedBarId === null) return false
     
     let response = await fetch(`${apiConfig["api_base_url"]}/bar?id=${storedBarId}`)
     let responseBody = await response.json()
+
     return responseBody["super_admin"] === 1
   }
 
