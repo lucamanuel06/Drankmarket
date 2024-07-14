@@ -8,8 +8,6 @@ export class LoginService extends ApiService {
 
   public user: User | null = null
 
-  public localStorage: Storage | null = null
-
   constructor() {
     super("/bar/login")
   }
@@ -26,13 +24,13 @@ export class LoginService extends ApiService {
 
     this.user = mapResponseToUser(body)
 
-    this.localStorage?.setItem(Constants.BarId, this.user.barId)
+    localStorage.setItem(Constants.BarId, this.user.barId)
     
     return LoginType.LoggedIn
   }
 
   logout() {
-    this.localStorage?.removeItem(Constants.BarId)
+    localStorage.removeItem(Constants.BarId)
     this.user = null
   }
 
@@ -55,9 +53,5 @@ export class LoginService extends ApiService {
     let responseBody = await response.json()
 
     return responseBody["super_admin"] === 1
-  }
-
-  setLocalStorage(localStorage: Storage) {
-    this.localStorage = localStorage
   }
 }

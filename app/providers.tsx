@@ -51,10 +51,6 @@ export function Providers({ children, themeProps }: ProvidersProps) {
       if (!isAdmin) router.push(Constants.Home)
     }
 
-    if (services.loginService.localStorage === null) {
-      services.loginService.setLocalStorage(localStorage)
-    }
-
     if (pathName.includes(Constants.Admin)) {
       sendPlebsHome()
     }

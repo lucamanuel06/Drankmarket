@@ -6,7 +6,7 @@ import { Device } from "@/models/device"
 export default function Page() {
   const context = useServiceContext()
   const deviceService = context.deviceService
-  const barId = context.loginService.getBarId()
+  const [barId, setBarId] = React.useState<string | null>(null)
 
   const [devices, setDevices] = React.useState([] as Device[])
   const [loaded, setLoaded] = React.useState(false)
@@ -28,6 +28,7 @@ export default function Page() {
       }
     }
 
+    setBarId(context.loginService.getBarId())
     if (!loaded && barId !== null) {
       retrieveDevices(barId)
     }
