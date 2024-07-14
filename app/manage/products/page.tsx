@@ -14,7 +14,7 @@ export default function Page() {
   let loginService = context.loginService
   let categoryService = context.categoryService
   let drinkService = context.drinkService
-  let barId = loginService.getBarId()
+  const [barId, setBarId] = React.useState<string | null>(null)
   
   const [categories, setCategories] = React.useState([] as Array<Category>)
   const [categoriesFailed, setCategoriesFailed] = React.useState(false)
@@ -57,6 +57,7 @@ export default function Page() {
       setDrinks(selectedDrinks)
     }
 
+    setBarId(loginService.getBarId())
     if (barId !== null) {
       fetchCategories(barId)
       fetchDrinks(barId)

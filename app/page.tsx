@@ -6,14 +6,14 @@ import { LoginService } from "@/services/login-service";
 import { LoginType } from "@/models/login";
 import { Device } from "@/models/device"
 import { useRouter } from "next/navigation";
+import { Constants } from "@/generic/constants";
 
 export default function Home() {
   const router = useRouter()
   let context = useServiceContext()
   let loginService = context.loginService
   let deviceService = context.deviceService
-  let storedBarId = loginService.getBarId()
-  const [isLoggedIn, setLoggedIn] = React.useState(storedBarId !== null)
+  const [isLoggedIn, setLoggedIn] = React.useState(false)
 
   const [devices, setDevices] = React.useState([] as Device[])
   const [loaded, setLoaded] = React.useState(false)
@@ -35,7 +35,9 @@ export default function Home() {
       }
     }
 
+    let storedBarId = localStorage.getItem(Constants.BarId)
     if (!loaded && storedBarId !== null) {
+      setLoggedIn(true)
       getDevices(storedBarId)
     }
   })

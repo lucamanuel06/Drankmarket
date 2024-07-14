@@ -16,7 +16,7 @@ export default function Page() {
   let loginService = context.loginService
   let drinkService = context.drinkService
   let categoryService = context.categoryService
-  let barId = loginService.getBarId()
+  const [barId, setBarId] = React.useState<string | null>(null)
 
   const [isLoaded, setLoaded] = React.useState(false)
   const [drinkColumns, setDrinkColumns] = React.useState([] as DrinkStock[][])
@@ -41,6 +41,7 @@ export default function Page() {
       }   
     }
 
+    setBarId(loginService.getBarId())
     setTimeout(() => {
       if (barId !== null) {
         getDrinks(barId)

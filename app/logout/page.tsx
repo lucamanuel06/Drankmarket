@@ -6,12 +6,8 @@ export default function LogoutScreen() {
   let loginService = useServiceContext().loginService
 
   React.useEffect(() => {
-    async function logout() {
-      await loginService.logout()
-      window.location.href = "/"
-    }
-
-    logout()
+    loginService.logout()
+    window.location.href = "/"
   })
 
   return (
