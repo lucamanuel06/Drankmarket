@@ -33,8 +33,8 @@ export const siteConfig = {
       href: Constants.ManageDevices,
     },
     {
-      label: "Data",
-      href: Constants.ManageData,
+      label: "Bestellingen",
+      href: Constants.ManageOrders,
     },
   ],
   adminItems: [
