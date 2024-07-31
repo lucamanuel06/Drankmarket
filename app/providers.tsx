@@ -12,6 +12,7 @@ import { DrinkService } from "@/services/drink-service";
 import { CategoryService } from "@/services/category-service";
 import { OrderService } from "@/services/order-service";
 import { Constants } from "@/generic/constants";
+import { ExportService } from "@/services/export-service";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -25,6 +26,7 @@ export type ServiceContent = {
   drinkService: DrinkService
   categoryService: CategoryService
   orderService: OrderService
+  exportService: ExportService
 }
 
 const services = {
@@ -34,6 +36,7 @@ const services = {
   drinkService: new DrinkService(),
   categoryService: new CategoryService(),
   orderService: new OrderService(),
+  exportService: new ExportService(),
 }
 
 export const ServiceContext = React.createContext<ServiceContent>(services);

@@ -27,6 +27,16 @@ export type OrderListItem = {
   method: OrderMethod
 }
 
+export type OrderExportItem = {
+  id: string
+  productName: string
+  device: string
+  timestamp: Date
+  amount: number
+  pricePerProduct: number
+  method: string
+}
+
 export function mapOrdersToListItems(drinks: Drink[], orders: Order[]): OrderListItem[] {
   return orders.map((item) => {
     return {
@@ -37,6 +47,20 @@ export function mapOrdersToListItems(drinks: Drink[], orders: Order[]): OrderLis
       amount: item.amount,
       pricePerProduct: item.pricePerProduct,
       method: item.method,
+    }
+  })
+}
+
+export function mapOrdersToExportItems(drinks: Drink[], deviceName: string, orders: Order[]): OrderExportItem[] {
+  return orders.map((item) => {
+    return {
+      id: item.id,
+      productName: drinks.find((drink) => drink.id == item.productId)?.name ?? "Unknown",
+      device: deviceName,
+      timestamp: item.timestamp,
+      amount: item.amount,
+      pricePerProduct: item.pricePerProduct,
+      method: methodToString(item.method),
     }
   })
 }
