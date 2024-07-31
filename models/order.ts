@@ -1,3 +1,5 @@
+import { Drink } from "./drink"
+
 export enum OrderMethod {
   Cash = 0,
   Card = 1,
@@ -13,6 +15,30 @@ export type Order = {
   amount: number
   pricePerProduct: number
   method: OrderMethod
+}
+
+export type OrderListItem = {
+  id: string
+  productName: string
+  deviceId: string
+  timestamp: Date
+  amount: number
+  pricePerProduct: number
+  method: OrderMethod
+}
+
+export function mapOrdersToListItems(drinks: Drink[], orders: Order[]): OrderListItem[] {
+  return orders.map((item) => {
+    return {
+      id: item.id,
+      productName: drinks.find((drink) => drink.id == item.productId)?.name ?? "Unknown",
+      deviceId: item.deviceId,
+      timestamp: item.timestamp,
+      amount: item.amount,
+      pricePerProduct: item.pricePerProduct,
+      method: item.method,
+    }
+  })
 }
 
 export function mapIntToMethod(int: number): OrderMethod {

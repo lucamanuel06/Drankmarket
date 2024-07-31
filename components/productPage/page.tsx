@@ -152,6 +152,14 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
   const orderService = new OrderService();
 
   const handleCashPayment = async () => {
+    handlePayment(OrderMethod.Cash)
+  };
+
+  const handleCardPayment = async () => {
+    handlePayment(OrderMethod.Card)
+  }
+
+  async function handlePayment(method: OrderMethod) {
     try {
       for (const item of itemList) {
         const productId = item.id;
@@ -163,7 +171,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
           productId,
           amount,
           pricePerProduct,
-          OrderMethod.Cash
+          method,
         );
       }
 
@@ -171,7 +179,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
     } catch (error) {
       console.error("Error creating order:", error);
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#182129] p-4">
@@ -286,7 +294,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
                   className="p-2 md:p-4 bg-gray-700 text-white rounded w-full"
                   onClick={() => {
                     if (num === "Pin") {
-                      // Pin functionality
+                      handleCardPayment();
                     } else if (num === "Contant") {
                       handleCashPayment();
                     } else {

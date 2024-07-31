@@ -1,17 +1,19 @@
 "use client"
 import React from "react";
 import { useServiceContext } from "@/app/providers";
-import { Order } from "@/models/order";
+import { mapIntToMethod, mapOrdersToListItems, methodToString, Order, OrderListItem } from "@/models/order";
 import { Device } from "@/models/device";
+import { Constants } from "@/generic/constants";
 
 export default function Page() {
   const context = useServiceContext()
   const loginService = context.loginService
   const orderService = context.orderService
   const deviceService = context.deviceService
+  const drinkService = context.drinkService
 
   const [devices, setDevices] = React.useState([] as Device[])
-  const [orders, setOrders] = React.useState(new Map<string, Order[]>())
+  const [orders, setOrders] = React.useState(new Map<string, OrderListItem[]>())
   const [loaded, setLoaded] = React.useState(false)
   const [loadingFailed, setLoadingFailed] = React.useState(false)
 
@@ -21,11 +23,13 @@ export default function Page() {
     async function retrieveOrders(bar: string) {
       try {
         let foundDevices = await deviceService.getDevices(bar)
+        let foundDrinks = await drinkService.getDrinks(bar)
         let newOrders = orders
         for (let i = 0; i < foundDevices.length; i++) {
           let deviceId = foundDevices[i].id
           let foundOrders = await orderService.getOrders(deviceId)
-          newOrders.set(deviceId, foundOrders)
+          let mappedOrders = mapOrdersToListItems(foundDrinks, foundOrders)
+          newOrders.set(deviceId, mappedOrders)
         }
         setDevices(foundDevices)
         setOrders(newOrders)
@@ -38,7 +42,7 @@ export default function Page() {
       }
     }
 
-    let barId = loginService.getBarId()
+    let barId = loginService.getBarId() ?? localStorage.getItem(Constants.BarId)
     if (!loaded && barId !== null) {
       retrieveOrders(barId)
     }
@@ -59,7 +63,6 @@ export default function Page() {
       }
       { loaded &&
         <div className="flex flex-col gap-2">
-          <p>Refresh to see changes</p>
           <div className="flex gap-1">
             <label htmlFor="device-select">Terminal:</label>
             <select 
@@ -98,7 +101,7 @@ export default function Page() {
 }
 
 type OrderRowProps = {
-  order: Order
+  order: OrderListItem
   onDelete: () => void
 }
 
@@ -111,10 +114,10 @@ function OrderRow({ order, onDelete }: OrderRowProps) {
 
   return (
     <tr className={`p-2 ${visibility} ${backgroundColor} ${textColor}`}>
-      <td>{order.productId}</td>
+      <td>{order.productName}</td>
       <td>{order.amount}</td>
       <td>{order.pricePerProduct}</td>
-      <td>{order.method}</td>
+      <td>{methodToString(mapIntToMethod(order.method))}</td>
       <td>{order.timestamp.toLocaleString()}</td>
       <td>
         <input
