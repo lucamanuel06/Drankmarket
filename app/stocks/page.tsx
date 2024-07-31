@@ -35,13 +35,14 @@ export default function Page() {
           return newStock
         })
         let columns = mapStocksToColumns(newStocks)
+        console.log(columns)
         setDrinkColumns(columns)
       } catch {
         setLoadingFailed(true)
-      }   
+      }
     }
 
-    setBarId(loginService.getBarId())
+    setBarId(loginService.getBarId() ?? localStorage.getItem(Constants.BarId))
     setTimeout(() => {
       if (barId !== null) {
         getDrinks(barId)

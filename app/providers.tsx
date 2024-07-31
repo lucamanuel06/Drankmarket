@@ -55,7 +55,9 @@ export function Providers({ children, themeProps }: ProvidersProps) {
       sendPlebsHome()
     }
 
-    if (services.loginService.getBarId() === null && pathName !== Constants.Home) {
+    let loggedOut = services.loginService.getBarId() === null && 
+      localStorage.getItem(Constants.BarId) == null
+    if (loggedOut && pathName !== Constants.Home) {
       router.push(Constants.Home)
     }
   })

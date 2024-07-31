@@ -4,6 +4,7 @@ import POSLayout from "./page";
 import { Drink } from "@/models/drink";
 import { Category } from "@/models/category";
 import { useServiceContext } from "@/app/providers";
+import { Constants } from "@/generic/constants";
 
 type ProductPageProps = {
   deviceId: string
@@ -14,7 +15,6 @@ const ParentComponent = ({ deviceId }: ProductPageProps) => {
   let loginService = context.loginService;
   let categoryService = context.categoryService;
   let drinkService = context.drinkService;
-  let barId = loginService.getBarId();
 
   const [categories, setCategories] = useState([] as Array<Category>);
   const [categoriesFailed, setCategoriesFailed] = useState(false);
@@ -53,11 +53,12 @@ const ParentComponent = ({ deviceId }: ProductPageProps) => {
       }
     };
 
-    if (barId !== null) {
+    let barId = loginService.getBarId() ?? localStorage.getItem(Constants.BarId)
+    if (barId != null) {
       fetchCategories(barId);
       fetchDrinks(barId);
     }
-  }, [barId, categoryService, drinkService]);
+  }, [categoryService, drinkService]);
 
   return <POSLayout drinks={drinks} categories={categories} deviceId={deviceId} />;
 };

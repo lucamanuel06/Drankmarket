@@ -8,6 +8,7 @@ import { useServiceContext } from "@/app/providers";
 import { Drink } from "@/models/drink";
 import { Category } from "@/models/category";
 import { getDrinksByCategory } from "@/generic/utils/drinks-mapper";
+import { Constants } from "@/generic/constants";
 
 export default function Page() {
   let context = useServiceContext()
@@ -57,7 +58,7 @@ export default function Page() {
       setDrinks(selectedDrinks)
     }
 
-    setBarId(loginService.getBarId())
+    setBarId(loginService.getBarId() ?? localStorage.getItem(Constants.BarId))
     if (barId !== null) {
       fetchCategories(barId)
       fetchDrinks(barId)
