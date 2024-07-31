@@ -18,17 +18,12 @@ import React, { useState } from "react";
 import { Drink } from "@/models/drink";
 import { Category } from "@/models/category";
 import { OrderService } from "@/services/order-service";
+import { OrderMethod } from "@/models/order"
 
 type ManageDrinksProps = {
   drinks: Array<Drink>;
   categories: Array<Category>;
   deviceId: string;
-};
-
-const categoryColors: { [key: string]: string } = {
-  Frisdranken: "bg-blue-500",
-  Bier: "bg-yellow-500",
-  Wijn: "bg-blue-700",
 };
 
 const POSLayout: React.FC<ManageDrinksProps> = ({
@@ -157,6 +152,14 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
   const orderService = new OrderService();
 
   const handleCashPayment = async () => {
+    handlePayment(OrderMethod.Cash)
+  };
+
+  const handleCardPayment = async () => {
+    handlePayment(OrderMethod.Card)
+  }
+
+  async function handlePayment(method: OrderMethod) {
     try {
       for (const item of itemList) {
         const productId = item.id;
@@ -167,7 +170,8 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
           deviceId,
           productId,
           amount,
-          pricePerProduct
+          pricePerProduct,
+          method,
         );
       }
 
@@ -175,7 +179,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
     } catch (error) {
       console.error("Error creating order:", error);
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#182129] p-4">
@@ -290,7 +294,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
                   className="p-2 md:p-4 bg-gray-700 text-white rounded w-full"
                   onClick={() => {
                     if (num === "Pin") {
-                      // Pin functionality
+                      handleCardPayment();
                     } else if (num === "Contant") {
                       handleCashPayment();
                     } else {
@@ -315,7 +319,8 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
             return (
               <div
                 key={category.id}
-                className={`flex flex-col rounded-md ${categoryColors[category.name] || "bg-gray-200"} p-4`}
+                className={`flex flex-col rounded-md p-4`}
+                style={{"background": category.color}}
               >
                 <h2 className="text-center text-white">{category.name}</h2>
                 <div className="flex flex-col gap-2">

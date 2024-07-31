@@ -43,7 +43,7 @@ export default function Home() {
   })
 
   return (
-    <main className="flex gap-3 p-9 min-h-screen">
+    <main className="flex flex-wrap gap-3 p-9 min-h-screen">
       { isLoggedIn && loadingFailed &&
         <p className="p-2 text-red-600">Terminals ophalen is mislukt</p>
       }

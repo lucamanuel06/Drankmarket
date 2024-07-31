@@ -2,6 +2,7 @@
 import React from "react"
 import { useServiceContext } from "@/app/providers"
 import { Device } from "@/models/device"
+import { Constants } from "@/generic/constants"
 
 export default function Page() {
   const context = useServiceContext()
@@ -28,7 +29,7 @@ export default function Page() {
       }
     }
 
-    setBarId(context.loginService.getBarId())
+    setBarId(context.loginService.getBarId() ?? localStorage.getItem(Constants.BarId))
     if (!loaded && barId !== null) {
       retrieveDevices(barId)
     }

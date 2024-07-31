@@ -23,9 +23,9 @@ export default function Page() {
         </Button>
         <Button
           className="py-16 px-40"
-          onPress={() => router.push(Constants.ManageData)}
+          onPress={() => router.push(Constants.ManageOrders)}
         >
-          Bekijk de data
+          Bekijk de bestellingen
         </Button>
       </div>
     </main>

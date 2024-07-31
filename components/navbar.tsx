@@ -22,7 +22,7 @@ export const Navbar = () => {
 
   const showManageButton =
     currentPage === Constants.ManageProducts ||
-    currentPage === Constants.ManageData;
+    currentPage === Constants.ManageOrders;
   const showAdminButton =currentPage === Constants.AdminBars
   const buttonUrl = showManageButton ? Constants.Management : showAdminButton ? Constants.Admin : null
 

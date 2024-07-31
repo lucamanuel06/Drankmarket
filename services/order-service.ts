@@ -1,7 +1,9 @@
 import { ApiService } from "./api-service"
-import { Order, mapResponseToOrder } from "@/models/order"
+import { Order, OrderMethod, mapResponseToOrder } from "@/models/order"
 
 export class OrderService extends ApiService {
+
+  public orders: Order[] | null = null
 
   constructor() {
     super("/order")
@@ -13,7 +15,9 @@ export class OrderService extends ApiService {
       value: deviceId,
     })
     let found: Array<Response> = await response.json()
-    return found.map(mapResponseToOrder)
+    let mapped = found.map(mapResponseToOrder)
+    this.orders = mapped
+    return mapped
   }
 
   async createOrder(
@@ -21,6 +25,7 @@ export class OrderService extends ApiService {
     productId: string,
     amount: number,
     pricePerProduct: number,
+    method: OrderMethod,
   ): Promise<Order> {
     let response = await this.doRequest("POST", {
       "device_id": deviceId,
@@ -28,9 +33,14 @@ export class OrderService extends ApiService {
       "timestamp": (new Date()).toISOString(),
       "amount": amount,
       "price_per_product": pricePerProduct,
+      "method": method,
     })
     let created: Response = await response.json()
-    return mapResponseToOrder(created)
+    let mapped = mapResponseToOrder(created)
+    if (this.orders !== null) {
+      this.orders = [mapped, ...this.orders]
+    }
+    return mapped
   }
 
   async updateOrder(updated: Order) {
@@ -41,10 +51,23 @@ export class OrderService extends ApiService {
       "timestamp": updated.timestamp.toISOString(),
       "amount": updated.amount,
       "price_per_product": updated.pricePerProduct,
+      "method": updated.method,
     })
+    if (this.orders !== null) {
+      this.orders = this.orders.map((item) => {
+        if (item.id === updated.id) {
+          return updated
+        } else {
+          return item
+        }
+      })
+    }
   }
 
   async deleteOrder(id: string) {
     await this.doRequest("DELETE", { "id": id })
+    if (this.orders !== null) {
+      this.orders = this.orders.filter((item) => item.id !== id)
+    }
   }
 }
