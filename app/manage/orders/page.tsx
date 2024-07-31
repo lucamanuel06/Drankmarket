@@ -1,9 +1,10 @@
 "use client"
 import React from "react";
 import { useServiceContext } from "@/app/providers";
-import { mapIntToMethod, mapOrdersToListItems, methodToString, Order, OrderListItem } from "@/models/order";
+import { mapIntToMethod, mapOrdersToExportItems, mapOrdersToListItems, methodToString, Order, OrderExportItem, OrderListItem } from "@/models/order";
 import { Device } from "@/models/device";
 import { Constants } from "@/generic/constants";
+import { Drink } from "@/models/drink";
 
 export default function Page() {
   const context = useServiceContext()
@@ -11,7 +12,9 @@ export default function Page() {
   const orderService = context.orderService
   const deviceService = context.deviceService
   const drinkService = context.drinkService
+  const exportService = context.exportService
 
+  const [drinks, setDrinks] = React.useState([] as Drink[])
   const [devices, setDevices] = React.useState([] as Device[])
   const [orders, setOrders] = React.useState(new Map<string, OrderListItem[]>())
   const [loaded, setLoaded] = React.useState(false)
@@ -31,6 +34,7 @@ export default function Page() {
           let mappedOrders = mapOrdersToListItems(foundDrinks, foundOrders)
           newOrders.set(deviceId, mappedOrders)
         }
+        setDrinks(foundDrinks)
         setDevices(foundDevices)
         setOrders(newOrders)
         if (foundDevices.length > 0) {
@@ -56,6 +60,25 @@ export default function Page() {
     }
   }
 
+  async function exportOrders() {
+    try {
+      let ordersToExport: OrderExportItem[] = []
+      for (let i = 0; i < devices.length; i++) {
+        let foundOrders = await orderService.getOrders(devices[i].id)
+        let mappedOrders = mapOrdersToExportItems(drinks, devices[i].name, foundOrders)
+        ordersToExport = ordersToExport.concat(mappedOrders)
+      }
+      let csvBlob = exportService.ordersToCSV(ordersToExport)
+      let url = URL.createObjectURL(csvBlob)
+      let tempLink = document.createElement("a")
+      tempLink.href = url
+      tempLink.setAttribute("download", "order_log.csv")
+      tempLink.click()
+    } catch {
+      console.error("An error occurred while exporting orders to CSV")
+    }
+  }
+
   return (
     <main className="m-auto w-11/12">
       { loadingFailed &&
@@ -63,6 +86,12 @@ export default function Page() {
       }
       { loaded &&
         <div className="flex flex-col gap-2">
+          <input
+            value="Exporteer"
+            onClick={exportOrders}
+            className="bg-slate-500 p-1 rounded w-fit"
+            type="button"
+          />
           <div className="flex gap-1">
             <label htmlFor="device-select">Terminal:</label>
             <select 
