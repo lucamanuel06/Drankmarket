@@ -7,7 +7,6 @@ import { LoginType } from "@/models/login";
 import { Device } from "@/models/device";
 import { useRouter } from "next/navigation";
 import { Constants } from "@/generic/constants";
-
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
@@ -47,7 +46,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-wrap gap-3 p-9 min-h-screen">
-      {isLoggedIn && loadingFailed && (
+      {isLoggedIn && loadingFailed &&
         <p className="p-2 text-red-600">Terminals ophalen is mislukt</p>
       }
       { isLoggedIn && devices.map((item) => (
@@ -61,7 +60,7 @@ export default function Home() {
       ))}
       {!isLoggedIn &&
         <LoginBox loginService={loginService} setLoggedIn={setLoggedIn} />
-      )}
+      }
     </main>
   );
 }
