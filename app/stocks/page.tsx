@@ -1,12 +1,12 @@
 "use client"
 import React from "react"
 import { useServiceContext } from "@/app/providers"
-import { 
-  DrinkStock, 
+import {
+  DrinkStock,
   toNewStock,
-  mapStocksToColumns, 
-  calcStockHeight, 
-  Fluctuation 
+  mapStocksToColumns,
+  calcStockHeight,
+  Fluctuation
 } from "./stocks-drink"
 import { RiseIcon, DropIcon, EqualIcon } from "./stock-icons"
 import { Constants } from "@/generic/constants"
