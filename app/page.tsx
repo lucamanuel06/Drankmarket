@@ -49,18 +49,17 @@ export default function Home() {
     <main className="flex flex-wrap gap-3 p-9 min-h-screen">
       {isLoggedIn && loadingFailed && (
         <p className="p-2 text-red-600">Terminals ophalen is mislukt</p>
-      )}
-      {isLoggedIn &&
-        devices.map((item) => (
-          <Button
-            key={item.id}
-            className="py-16 px-40 flex flex-col items-start"
-            onClick={() => router.push(`/device/${item.id}`)}
-          >
-            {item.name}
-          </Button>
-        ))}
-      {!isLoggedIn && (
+      }
+      { isLoggedIn && devices.map((item) => (
+        <Button
+          key={item.id}
+          className="py-16 px-40 flex flex-col items-start"
+          onPress={() => router.push(`/device/${item.id}`)}
+        >
+          {item.name}
+        </Button>
+      ))}
+      {!isLoggedIn &&
         <LoginBox loginService={loginService} setLoggedIn={setLoggedIn} />
       )}
     </main>
@@ -124,15 +123,15 @@ const LoginBox: React.FC<LoginInputProps> = ({ loginService, setLoggedIn }) => {
             />
           </div>
         </div>
-        <button
-          onClick={tryLogin}
-          className="bg-slate-500 p-2 rounded text-white w-full mt-4"
-        >
-          Bevestig
-        </button>
-        {loginFailed && (
-          <p className="text-red-600 mt-2">Inloggen mislukt</p>
-        )}
+        <Button 
+          value="Bevestig"
+          onPress={async () => tryLogin()}
+          className="bg-slate-500 p-1 rounded"
+          type="button"
+        />
+        { loginFailed &&
+          <p className="text-red-600">Inloggen mislukt</p>
+        }
       </div>
     </div>
   );
