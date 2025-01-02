@@ -319,7 +319,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
             return (
               <div
                 key={category.id}
-                className={`flex flex-col rounded-md p-4`}
+                className={`flex flex-col rounded-md p-4 h-full overflow-y-auto`}
                 style={{"background": category.color}}
               >
                 <h2 className="text-center text-white">{category.name}</h2>
