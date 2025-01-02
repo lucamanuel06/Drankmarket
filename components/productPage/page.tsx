@@ -292,7 +292,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
                 <Button
                   key={num}
                   className="p-2 md:p-4 bg-gray-700 text-white rounded w-full"
-                  onClick={() => {
+                  onPress={() => {
                     if (num === "Pin") {
                       handleCardPayment();
                     } else if (num === "Contant") {

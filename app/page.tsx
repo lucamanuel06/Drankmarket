@@ -51,7 +51,7 @@ export default function Home() {
         <Button
           key={item.id}
           className="py-16 px-40 flex flex-col items-start"
-          onClick={() => router.push(`/device/${item.id}`)}
+          onPress={() => router.push(`/device/${item.id}`)}
         >
           {item.name}
         </Button>
@@ -115,9 +115,9 @@ const LoginBox: React.FC<LoginInputProps> = ({ loginService, setLoggedIn }) => {
             />
           </div>
         </div>
-        <input 
+        <Button 
           value="Bevestig"
-          onClick={async () => tryLogin()}
+          onPress={async () => tryLogin()}
           className="bg-slate-500 p-1 rounded"
           type="button"
         />
