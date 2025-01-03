@@ -19,6 +19,7 @@ export default function Page() {
   const [barId, setBarId] = React.useState<string | null>(null)
 
   const [isLoaded, setLoaded] = React.useState(false)
+  const [lastDate, setLastDate] = React.useState<Date | null>(null)
   const [drinkColumns, setDrinkColumns] = React.useState([] as DrinkStock[][])
   const [loadingFailed, setLoadingFailed] = React.useState(false)
   let stockHeight = calcStockHeight(drinkColumns)
@@ -44,11 +45,13 @@ export default function Page() {
 
     setBarId(loginService.getBarId() ?? localStorage.getItem(Constants.BarId))
     setTimeout(() => {
-      if (barId !== null) {
+      let currentDate = new Date()
+      if (barId !== null && currentDate.getMinutes() != lastDate?.getMinutes()) {
         getDrinks(barId)
         setLoaded(true)
         console.log("Refreshed the stocks")
       }
+      setLastDate(currentDate)
     }, isLoaded ? Constants.StocksRefreshInterval : 0)
   })
 

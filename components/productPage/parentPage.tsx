@@ -22,13 +22,10 @@ const ParentComponent = ({ deviceId }: ProductPageProps) => {
   const [drinks, setDrinks] = useState([] as Array<Drink>);
   const [drinksFailed, setDrinksFailed] = useState(false);
 
+  const [lastDate, setLastDate] = useState<Date | null>(null)
+
   useEffect(() => {
     const fetchCategories = async (barId: string) => {
-      if (categoryService.categories !== null) {
-        setCategories(categoryService.categories);
-        return;
-      }
-
       try {
         const categories = await categoryService.getCategories(barId);
         setCategories(categories);
@@ -39,11 +36,6 @@ const ParentComponent = ({ deviceId }: ProductPageProps) => {
     };
 
     const fetchDrinks = async (barId: string) => {
-      if (drinkService.drinks !== null) {
-        setDrinks(drinkService.drinks);
-        return;
-      }
-
       try {
         const drinks = await drinkService.getDrinks(barId);
         setDrinks(drinks);
@@ -54,11 +46,15 @@ const ParentComponent = ({ deviceId }: ProductPageProps) => {
     };
 
     let barId = loginService.getBarId() ?? localStorage.getItem(Constants.BarId)
-    if (barId != null) {
-      fetchCategories(barId);
-      fetchDrinks(barId);
-    }
-  }, [categoryService, drinkService]);
+    setTimeout(() => {
+      let currentDate = new Date()
+      if (barId != null && currentDate.getMinutes() != lastDate?.getMinutes()) {
+        fetchCategories(barId);
+        fetchDrinks(barId);
+      }
+      setLastDate(currentDate)
+    }, lastDate !== null ? Constants.StocksRefreshInterval : 0)
+  });
 
   return <POSLayout drinks={drinks} categories={categories} deviceId={deviceId} />;
 };
