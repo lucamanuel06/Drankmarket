@@ -14,7 +14,7 @@ export const Constants = {
   Stocks: "/stocks",
 
   // STOCKS CONSTANTS
-  StocksRefreshInterval: 60 * 1000, // Seconds * Miliseconds
+  StocksRefreshInterval: 2 * 1000, // Seconds * Miliseconds
   MaxColumns: 3,
   MaxStocksPerColumn: 10,
   RiseColor: "#3A9025",

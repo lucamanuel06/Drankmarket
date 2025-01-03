@@ -265,7 +265,7 @@ const POSLayout: React.FC<ManageDrinksProps> = ({
                   </button>
                 </div>
                 <div>€{calculateTotalPrice().toFixed(2)}</div>
-                
+
               </div>
 
           </div>
