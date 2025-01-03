@@ -28,7 +28,7 @@ export type ServiceContent = {
   categoryService: CategoryService
   orderService: OrderService
   exportService: ExportService
-
+  crashService: CrashService
 }
 
 const services = {
