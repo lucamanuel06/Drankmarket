@@ -48,9 +48,7 @@ const ParentComponent = ({ deviceId }: ProductPageProps) => {
     let barId = loginService.getBarId() ?? localStorage.getItem(Constants.BarId)
     setTimeout(() => {
       let currentDate = new Date()
-      console.log(`Minutes`)
       if (barId != null && currentDate.getMinutes() != lastDate?.getMinutes()) {
-        console.log("refriesh")
         fetchCategories(barId);
         fetchDrinks(barId);
       }
